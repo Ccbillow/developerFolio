@@ -12,10 +12,16 @@
   font-weight: 700;
   margin: 15px 0 0 0;
 }
+
+.card-title-icon {
+  font-size: 18px;
+  color: $titleColor;
+}
 .card-subtitle {
   color: $cardSubtitle;
   font-size: 17px;
   line-height: 1.5rem;
+  white-space: pre-line;
 }
 .project-card {
   display: flex;
@@ -41,7 +47,7 @@
 }
 
 .project-detail {
-  text-align: center;
+  text-align: left;
 }
 .project-card-light:hover {
   box-shadow: $lightBoxShadowDark 0px 20px 30px -10px;
@@ -64,6 +70,11 @@
   gap: 1rem 1rem;
 }
 
+.project-card-footer {
+  display: flex;
+  justify-content: center;
+}
+
 .project-card-footer span.project-tag {
   background: $buttonColor;
   color: $lightBackground3;
@@ -71,8 +82,8 @@
   align-items: center;
   border-radius: 4px;
   display: inline-flex;
-  font-size: 0.75rem;
-  height: 2em;
+  font-size: 0.9rem;
+  height: 2.4em;
   justify-content: center;
   white-space: nowrap;
   line-height: 1.5;

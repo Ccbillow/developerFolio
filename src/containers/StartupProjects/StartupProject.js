@@ -19,7 +19,7 @@ export default function StartupProject() {
   }
   return (
     <Fade bottom duration={1000} distance="20px">
-      <div className="main" id="projects">
+      <div className="main" id="opensource">
         <div>
           <h1 className="skills-heading">{bigProjects.title}</h1>
           <p
@@ -56,6 +56,7 @@ export default function StartupProject() {
                     <h5
                       className={isDark ? "dark-mode card-title" : "card-title"}
                     >
+                      <i className="fas fa-laptop-code card-title-icon"></i>{" "}
                       {project.projectName}
                     </h5>
                     <p
