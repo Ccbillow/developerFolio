@@ -180,12 +180,11 @@ const workExperiences = {
       company: "Alipay (Alibaba)",
       companylogo: require("./assets/images/alipayLogo.png"),
       date: "July 2021 – March 2022",
-      desc: "Built and owned a File Platform (TB-level financial data transfer) serving 100+ banks, achieving 60%+ adoption of automated file transfers and a 20% productivity improvement",
+      desc: "Built a File Platform (TB-level financial data transfer) serving 100+ banks, achieving 60%+ adoption of automated file transfers and a 20% productivity improvement",
       descBullets: [
-        "Solved a cross-environment deployment blocker under a 2-month deadline using Maven multi-module + Spring profile build-time isolation — adopted by other teams",
+        "Solved a cross-environment deployment blocker under a 2-month deadline using Maven multi-module + Spring profile build-time isolation",
         "Designed a high-availability layer to handle unreliable dependencies — circuit breakers, rate limiting, and async fallback queue",
-        "Implemented a Data Integrity Check Task to ensure end-to-end data consistency, reducing manual validation effort by 2–3 hrs/day",
-        "Resolved a cross-team SDK delivery crisis through structured escalation; phased delivery plan got the project back on track without blame"
+        "Implemented a Data Integrity Check Task to ensure end-to-end data consistency, reducing manual validation effort by 2–3 hrs/day"
       ]
     },
     {
