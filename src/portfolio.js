@@ -21,9 +21,9 @@ const illustration = {
 
 const greeting = {
   username: "TaoCheng",
-  title: "Hi, I'm Tao",
+  title: "Hi all, I'm Tao",
   subTitle: emoji(
-    "A passionate Java Engineer 🚀 with 7+ years building high-concurrency backend systems (320k QPS, TB-scale data) — now embracing AI to build smarter, more powerful platforms."
+    "A passionate Java Backend Engineer 🚀 with 7+ years building high-concurrency backend systems (320k QPS, TB-scale data) — now embracing AI to build smarter, more powerful platforms."
   ),
   resumeLink: "https://drive.google.com/open?id=1jJdI1KrRKarGsu9wEFk0zemfDNleweP4&usp=drive_fs",
   displayGreeting: true
@@ -56,7 +56,7 @@ const skillsSection = {
       "⚡ Design and ship production RAG systems — hybrid search, reranking, streaming, and LLM integration"
     ),
     emoji(
-      "⚡ Write clean, testable code with unit and integration tests across backend services"
+      "⚡ Write clean, testable code across backend services"
     )
   ],
 
