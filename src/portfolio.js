@@ -25,7 +25,7 @@ const greeting = {
   subTitle: emoji(
     "A passionate Java Backend Engineer 🚀 with 7+ years building high-concurrency backend systems (320k QPS, TB-scale data) — now embracing AI to build smarter, more powerful platforms."
   ),
-  resumeLink: "https://drive.google.com/open?id=1jJdI1KrRKarGsu9wEFk0zemfDNleweP4&usp=drive_fs",
+  resumeLink: "/resume.pdf",
   displayGreeting: true
 };
 
