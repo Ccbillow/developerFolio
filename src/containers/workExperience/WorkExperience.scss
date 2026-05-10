@@ -144,7 +144,7 @@
 }
 
 .detail-desc {
-  font-size: 1.08rem;
+  font-size: 1.12rem;
   line-height: 1.7;
   margin-bottom: 1rem;
   color: #555;
@@ -162,13 +162,55 @@
 }
 
 .detail-bullets li {
-  font-size: 1.05rem;
+  font-size: 1.10rem;
   line-height: 1.7;
   color: #444;
 }
 
 .dark-card .detail-bullets li {
   color: #ccc;
+}
+
+/* ── Tech Tags ───────────────────────────────── */
+
+.detail-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1.4rem;
+}
+
+.detail-tag {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  background: #e8f0fe;
+  color: #1565c0;
+  letter-spacing: 0.02em;
+  cursor: default;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.detail-tag:hover {
+  background: #1565c0;
+  color: #fff;
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(21, 101, 192, 0.35);
+}
+
+.detail-tag.dark-tag {
+  background: #1a2a4a;
+  color: #90caf9;
+}
+
+.detail-tag.dark-tag:hover {
+  background: #1565c0;
+  color: #fff;
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(21, 101, 192, 0.5);
 }
 
 /* ── Responsive ──────────────────────────────── */

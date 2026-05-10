@@ -143,18 +143,106 @@ const techStack = {
   experience: [
     {
       Stack: "Java Backend & Microservices",
-      progressPercentage: "95%"
+      progressPercentage: "90%"
     },
     {
-          Stack: "DevOps & Cloud (Docker / K8s / AWS)",
-          progressPercentage: "80%"
+      Stack: "Cloud / DevOps",
+      progressPercentage: "75%"
     },
     {
-      Stack: "AI / RAG Engineering",
-      progressPercentage: "65%"
+      Stack: "AI / LLM Engineering",
+      progressPercentage: "55%"
+    },
+    {
+      Stack: "Frontend",
+      progressPercentage: "35%"
     }
   ],
   displayCodersrank: false
+};
+
+// Tech Stack Section
+
+const techStackSection = {
+  display: true,
+  title: "Tech Stack",
+  tabs: [
+    {
+      label: "Languages",
+      techs: [
+        {name: "Java",        img: "/tech/java.svg"},
+        {name: "SQL",         img: "/tech/sql.svg"},
+        {name: "Bash / Shell",img: "/tech/bash.svg"},
+        {name: "HTML",        img: "/tech/html.svg"},
+        {name: "JavaScript",  img: "/tech/javascript.svg"},
+        {name: "React",       img: "/tech/react.svg"},
+        {name: "YAML",        img: "/tech/yaml.svg"}
+      ]
+    },
+    {
+      label: "Frameworks",
+      techs: [
+        {name: "Spring Boot",     img: "/tech/springboot.svg"},
+        {name: "Spring Cloud",    img: "/tech/springcloud.svg"},
+        {name: "Spring Security", img: "/tech/springsecurity.svg"},
+        {name: "Hibernate",       img: "/tech/hibernate.svg"},
+        {name: "MyBatis",         img: "/tech/mybatis.svg"},
+        {name: "JUnit 5",         img: "/tech/junit.svg"},
+        {name: "JWT",             img: "/tech/jwt.svg"}
+      ]
+    },
+    {
+      label: "Data & Messaging",
+      techs: [
+        {name: "MySQL",      img: "/tech/mysql.svg"},
+        {name: "PostgreSQL", img: "/tech/postgresql.svg"},
+        {name: "Oracle",     img: "/tech/oracle.svg"},
+        {name: "Redis",      img: "/tech/redis.svg"},
+        {name: "Kafka",      img: "/tech/kafka.svg"}
+      ]
+    },
+    {
+      label: "DevOps & Cloud",
+      techs: [
+        {name: "Docker",         img: "/tech/docker.svg"},
+        {name: "Kubernetes",     img: "/tech/kubernetes.svg"},
+        {name: "AWS",            img: "/tech/aws.svg"},
+        {name: "Azure",          img: "/tech/azure.svg"},
+        {name: "Jenkins",        img: "/tech/jenkins.svg"},
+        {name: "Git",            img: "/tech/git.svg"},
+        {name: "Bitbucket",      img: "/tech/bitbucket.svg"},
+        {name: "GitHub Actions", img: "/tech/githubactions.svg"},
+        {name: "Linux",          img: "/tech/linux.svg"}
+      ]
+    },
+    {
+      label: "Architecture & Tools",
+      techs: [
+        {name: "Microservices", img: "/tech/microservice.svg"},
+        {name: "RESTful API",   img: "/tech/restapi.svg"},
+        {name: "Maven",         img: "/tech/maven.svg"},
+        {name: "Postman",       img: "/tech/postman.svg"},
+        {name: "Swagger",       img: "/tech/swagger.svg"},
+        {name: "SonarQube",     img: "/tech/sonarqube.svg"},
+        {name: "ELK",           img: "/tech/elastic.svg"},
+        {name: "Jira",          img: "/tech/jira.svg"},
+        {name: "IntelliJ IDEA", img: "/tech/intellijidea.svg"}
+      ]
+    },
+    {
+      label: "AI & LLM",
+      techs: [
+        {name: "Claude",            img: "/tech/claude.svg"},
+        {name: "OpenAI",            img: "/tech/openai.svg"},
+        {name: "LangChain4j",       img: "/tech/langchain4j.svg"},
+        {name: "Qdrant",            img: "/tech/qdrant.svg"},
+        {name: "RAG",               img: "/tech/rag.svg"},
+        {name: "Cohere",            img: "/tech/cohere.svg"},
+        {name: "Hybrid Search",     img: "/tech/hybridsearch.svg"},
+        {name: "Prompt Engineering",img: "/tech/prompt.svg"}
+      ]
+    }
+  ]
 };
 
 // Work Experience Section
@@ -173,7 +261,8 @@ const workExperiences = {
         "[OCBC] Introduced a dual-phase sprint approach that reduced rework and improved delivery predictability",
         "[Sanofi] Refactored Sanofi's complex reverse-match legacy system using test-first approach; 10+ business branches mapped into XMind",
         "[Sanofi] Rebuilt test infrastructure: BaseTest context reuse, full mocking, JSON fixtures — tests went from manual eyeballing to failures caught at build time"
-      ]
+      ],
+      techTags: ["Java 11/17", "Spring Boot", "Spring Cloud", "Kafka", "PostgreSQL", "Kubernetes", "Docker", "AWS", "Jenkins", "JUnit 5"]
     },
     {
       role: "Senior Java Software Engineer",
@@ -185,7 +274,8 @@ const workExperiences = {
         "Solved a cross-environment deployment blocker under a 2-month deadline using Maven multi-module + Spring profile build-time isolation",
         "Designed a high-availability layer to handle unreliable dependencies — circuit breakers, rate limiting, and async fallback queue",
         "Implemented a Data Integrity Check Task to ensure end-to-end data consistency, reducing manual validation effort by 2–3 hrs/day"
-      ]
+      ],
+      techTags: ["Java", "SofaBoot", "OceanBase(MySQL)", "Redis", "DataWorks", "MyBatis", "Maven", "Docker", "ELK"]
     },
     {
       role: "Java Software Engineer",
@@ -197,7 +287,8 @@ const workExperiences = {
         "Designed a DB-configurable policy workflow using Strategy + Factory — process changes require config updates only, no code modification",
         "Implemented Redis caching for credit-check API calls, reducing third-party costs by 80%",
         "Traced a recurring OOM crash (2 incidents before root cause found) to unclosed HttpConnections via heap dump + MAT; shipped hotfix and RCA"
-      ]
+      ],
+      techTags: ["Java", "Spring Boot", "MyBatis", "MySQL", "Redis", "REST API", "Tomcat"]
     },
     {
       role: "Java Software Engineer",
@@ -209,7 +300,8 @@ const workExperiences = {
         "On-call during load testing, we diagnosed a throughput bottleneck via heap dump and GC log analysis",
         "Implemented optimisations  — object restructuring, batch queries, and JVM tuning — lifting core API throughput from 28k to 320k QPS during peak sales",
         "Activity Submission System: rewrote the detail page using batch queries + async calls, response time 6s → 300ms"
-      ]
+      ],
+      techTags: ["Java", "SpringMVC", "Dubbo", "MySQL", "Redis", "JVM Tuning", "JMeter"]
     }
   ]
 };
@@ -323,6 +415,7 @@ export {
   skillsSection,
   educationInfo,
   techStack,
+  techStackSection,
   workExperiences,
   openSource,
   bigProjects,

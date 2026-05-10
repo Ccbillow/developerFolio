@@ -72,6 +72,16 @@ export default function WorkExperience() {
                   </li>
                 ))}
               </ul>
+
+              {selected.techTags?.length > 0 && (
+                <div className="detail-tags">
+                  {selected.techTags.map((tag, i) => (
+                    <span key={i} className={isDark ? "detail-tag dark-tag" : "detail-tag"}>
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              )}
             </div>
 
           </div>
