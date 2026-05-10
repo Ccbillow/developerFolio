@@ -19,7 +19,7 @@ export default function StartupProject() {
   }
   return (
     <Fade bottom duration={1000} distance="20px">
-      <div className="main" id="opensource">
+      <div className="main open-source-section" id="opensource">
         <div>
           <h1 className="skills-heading">{bigProjects.title}</h1>
           <p
