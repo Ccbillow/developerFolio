@@ -58,7 +58,7 @@
   font-weight: 700;
   font-size: 19px;
   margin: 0px;
-  padding-top: 0.8rem;
+  padding-top: 1.2rem;
   line-height: normal;
 }
 
@@ -66,16 +66,18 @@
   color: $titleColor;
   font-size: 19px;
   margin: 0px;
-  padding-top: 0.5rem;
+  padding-top: 0.8rem;
 }
 
 .education-text-desc {
-  margin-top: 0.5rem;
-  margin-bottom: 0.5rem;
+  margin-top: 0.6rem;
+  margin-bottom: 0.8rem;
+  line-height: 1.3;
 }
 
 .education-text-bullets > ul {
-  margin-top: 0.5rem;
+  margin-top: 0.6rem;
+  line-height: 1.8;
 }
 
 /* Media Query */
