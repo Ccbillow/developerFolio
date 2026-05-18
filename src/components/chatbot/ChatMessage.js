@@ -78,7 +78,7 @@ export default function ChatMessage({message, isDark, onRetry}) {
 
   return (
     <div className={`${styles.msg} ${isUser ? styles.msgUser : styles.msgAssistant}`}>
-      {!isUser && <img src="/robot.svg" alt="AI" className={styles.msgAvatar} />}
+      {!isUser && <img src="/robot-message.png" alt="TBot" className={styles.msgAvatar} />}
       <div className={styles.bubbleWrapper}>
         <div
           className={[

@@ -1,7 +1,6 @@
 import React, {useState, useRef, useEffect, useContext, useCallback} from "react";
 import Lottie from "lottie-react";
 import chatbotAnimation from "../../assets/lottie/chatbot.json";
-import profilePhoto from "../../assets/images/profile.jpg";
 import ChatMessage from "./ChatMessage";
 import styles from "./Chatbot.module.css";
 import StyleContext from "../../contexts/StyleContext";
@@ -9,7 +8,7 @@ import StyleContext from "../../contexts/StyleContext";
 const API_URL =
   (process.env.REACT_APP_API_URL || "http://localhost:8080") + "/api/chat/stream";
 const WELCOME =
-  "Hi! I'm Tao's AI assistant 👋 Ask me anything about his background, skills, projects, or experience.";
+  "Hi! I'm TBot, Tao's personal assistant 👋 I know Tao's story inside out — let's talk.";
 const QUICK_REPLIES = [
   "What's your tech stack?",
   "How does the AI Project work?",
@@ -236,9 +235,11 @@ export default function Chatbot() {
         {/* Header */}
         <div className={styles.header}>
           <div className={styles.headerLeft}>
-            <img src={profilePhoto} alt="Tao" className={styles.headerAvatar} />
+            <div className={styles.headerAvatarWrap}>
+              <img src="/robot-header.jpg" alt="TBot" className={styles.headerAvatar} />
+            </div>
             <div>
-              <div className={styles.headerTitle}>Ask Tao's AI</div>
+              <div className={styles.headerTitle}>Chat with TBot</div>
               <div className={styles.headerSub}>
                 <span
                   className={[
@@ -253,7 +254,7 @@ export default function Chatbot() {
                     <span className={styles.dot2}>.</span>
                     <span className={styles.dot3}>.</span>
                   </>
-                ) : "Ready to chat"}
+                ) : "TBot is online"}
               </div>
             </div>
           </div>
@@ -355,7 +356,7 @@ export default function Chatbot() {
         onMouseEnter={() => setShowPulse(false)}
         aria-label="Toggle AI chat"
       >
-        <span className={styles.fabTooltip}>Chat with Tao's AI</span>
+        <span className={styles.fabTooltip}>Chat with TBot</span>
         {showPulse && !isOpen && (
           <span className={styles.fabPulseRing} />
         )}
