@@ -43,11 +43,37 @@
   padding: 15px 20px;
   color: $textColor;
   text-decoration: none;
+  position: relative;
+  transition: color 0.15s ease;
 }
 
 .header li a:hover,
 .header .menu-btn:hover {
   background-color: $headerHoverBG;
+}
+
+.header li a.nav-active {
+  color: $buttonColor;
+  font-weight: 600;
+}
+
+.header li a.nav-active::after {
+  content: "";
+  position: absolute;
+  bottom: 6px;
+  left: 20px;
+  right: 20px;
+  height: 2px;
+  background: $buttonColor;
+  border-radius: 1px;
+}
+
+.dark-menu li a.nav-active {
+  color: #90caf9 !important;
+}
+
+.dark-menu li a.nav-active::after {
+  background: #90caf9;
 }
 
 .header .logo {

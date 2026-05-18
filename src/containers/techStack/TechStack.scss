@@ -71,12 +71,19 @@
   gap: 0.75rem;
   padding: 1.2rem 0.5rem;
   border-radius: 12px;
-  transition: transform 0.2s;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
   cursor: default;
 }
 
 .tech-item:hover {
   transform: translateY(-5px);
+  background: rgba(21, 101, 192, 0.06);
+  box-shadow: 0 6px 20px rgba(21, 101, 192, 0.1);
+}
+
+.tech-item.dark-mode:hover {
+  background: rgba(144, 202, 249, 0.08);
+  box-shadow: 0 6px 20px rgba(144, 202, 249, 0.08);
 }
 
 .tech-item img {

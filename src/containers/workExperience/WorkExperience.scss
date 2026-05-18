@@ -95,7 +95,21 @@
   border-radius: 16px;
   padding: 2rem;
   min-height: 320px;
-  transition: all 0.3s ease;
+}
+
+.detail-inner {
+  animation: detailFadeIn 0.22s ease both;
+}
+
+@keyframes detailFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .dark-card {

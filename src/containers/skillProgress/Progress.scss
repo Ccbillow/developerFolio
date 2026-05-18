@@ -11,6 +11,7 @@
 .meter > span {
   display: block;
   height: 100%;
+  width: 0;
   border-top-right-radius: 6px;
   border-bottom-right-radius: 6px;
   border-top-left-radius: 20px;
@@ -18,6 +19,21 @@
   background-color: $progressBarSpanBG;
   position: relative;
   overflow: hidden;
+  transition: background-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.bar-animated {
+  animation: fillBar 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes fillBar {
+  from { width: 0; }
+  to   { width: var(--target-width); }
+}
+
+.meter:hover > span {
+  background-color: #1565c0;
+  box-shadow: 0 0 10px rgba(21, 101, 192, 0.45);
 }
 .skill {
   line-height: 3.5vw;

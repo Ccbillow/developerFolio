@@ -47,7 +47,7 @@
   top: 0;
   right: 0;
   bottom: 0;
-  width: 440px;
+  width: clamp(420px, 40vw, 700px);
   z-index: 9998;
   background: #ffffff;
   display: flex;
@@ -233,7 +233,7 @@
 .bubble {
   padding: 0.8rem 1.1rem;
   border-radius: 16px;
-  font-size: 0.95rem;
+  font-size: 1.05rem;
   line-height: 1.7;
   white-space: pre-wrap;
   word-break: break-word;
@@ -248,7 +248,7 @@
 
 .bubbleAI {
   background: #fff;
-  color: #1a1a2e;
+  color: #111111;
   border-bottom-left-radius: 4px;
   box-shadow: 0 1px 6px rgba(0, 0, 0, 0.07);
 }
@@ -286,6 +286,17 @@
   border-radius: 4px;
   font-size: 0.87em;
   font-family: "JetBrains Mono", "Fira Code", "Courier New", monospace;
+}
+
+.bulletList {
+  margin: 0.4rem 0 0.4rem 1.1rem;
+  padding: 0;
+  list-style: disc;
+}
+
+.bulletList li {
+  margin: 0.25rem 0;
+  line-height: 1.55;
 }
 
 /* ── Streaming cursor ────────────────────────── */
@@ -328,7 +339,7 @@
   border: 1.5px solid #d0dce8;
   border-radius: 12px;
   padding: 0.7rem 1rem;
-  font-size: 0.92rem;
+  font-size: 1rem;
   font-family: "Raleway", sans-serif;
   resize: none;
   outline: none;

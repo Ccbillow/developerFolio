@@ -6,7 +6,8 @@ import ChatMessage from "./ChatMessage";
 import styles from "./Chatbot.module.css";
 import StyleContext from "../../contexts/StyleContext";
 
-const API_URL = "http://localhost:8080/api/chat/stream";
+const API_URL =
+  (process.env.REACT_APP_API_URL || "http://localhost:8080") + "/api/chat/stream";
 const WELCOME =
   "Hi! I'm Tao's AI assistant 👋 Ask me anything about his background, skills, projects, or experience.";
 
@@ -19,6 +20,7 @@ export default function Chatbot() {
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
   const hasGreeted = useRef(false);
+  const sessionIdRef = useRef(crypto.randomUUID());
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({behavior: "smooth"});
@@ -69,7 +71,7 @@ export default function Chatbot() {
       const res = await fetch(API_URL, {
         method: "POST",
         headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({question: q})
+        body: JSON.stringify({question: q, sessionId: sessionIdRef.current})
       });
 
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -78,6 +80,7 @@ export default function Chatbot() {
       const decoder = new TextDecoder();
       let buf = "";
       let currentEvent = "";
+      let dataLines = [];
 
       while (true) {
         const {done, value} = await reader.read();
@@ -90,17 +93,35 @@ export default function Chatbot() {
         for (const line of lines) {
           if (line.startsWith("event:")) {
             currentEvent = line.slice(6).trim();
+            dataLines = [];
           } else if (line.startsWith("data:")) {
-            const raw = line.slice(5);
+            // slice(5) preserves token-leading spaces (e.g. " Alipay" token → "data: Alipay")
+            dataLines.push(line.slice(5));
+          } else if (line === "") {
+            // Blank line = end of SSE event — dispatch accumulated data
+            if (dataLines.length === 0) continue;
+            const raw = dataLines.join("\n");
+            dataLines = [];
+
             if (currentEvent === "done" || raw.trim() === "[DONE]") {
               finishStreaming();
               return;
             }
+            if (currentEvent === "error") {
+              setMessages(prev => [
+                ...prev.slice(0, -1),
+                {role: "assistant", text: raw.trim()}
+              ]);
+              finishStreaming();
+              return;
+            }
             if (currentEvent === "message") {
+              // Decode \\n back to real newlines (backend encodes \n to avoid SSE line conflicts)
+              const decoded = raw.replace(/\\n/g, "\n");
               setMessages(prev => {
                 const next = [...prev];
                 const last = next[next.length - 1];
-                return [...next.slice(0, -1), {...last, text: last.text + raw}];
+                return [...next.slice(0, -1), {...last, text: last.text + decoded}];
               });
             }
           }

@@ -64,7 +64,12 @@ export default function StartupProject() {
                         isDark ? "dark-mode card-subtitle" : "card-subtitle"
                       }
                     >
-                      {project.projectDesc}
+                      {project.projectDesc.split("\n").map((line, idx, arr) => (
+                        <React.Fragment key={idx}>
+                          {line}
+                          {idx < arr.length - 1 && <br />}
+                        </React.Fragment>
+                      ))}
                     </p>
                     {project.footerLink ? (
                       <div className="project-card-footer">

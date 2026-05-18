@@ -36,7 +36,23 @@ export default function Greeting() {
               >
                 {greeting.subTitle}
               </p>
-              <div id="resume" className="empty-div"></div>
+              <div className="greeting-stat-badges">
+                {[
+                  {number: "7+",   label: "Years Experience"},
+                  {number: "320k", label: "Peak QPS"},
+                  {number: "TB",   label: "Scale Data"},
+                  {number: "4",    label: "Top Companies"},
+                ].map((stat, i) => (
+                  <div
+                    key={i}
+                    className={isDark ? "stat-badge stat-badge-dark" : "stat-badge"}
+                    style={{animationDelay: `${i * 0.1}s`}}
+                  >
+                    <span className="stat-number">{stat.number}</span>
+                    <span className="stat-label">{stat.label}</span>
+                  </div>
+                ))}
+              </div>
               <SocialMedia />
               <div className="button-greeting-div">
                 <Button text="Get in Touch" href="#contact" />

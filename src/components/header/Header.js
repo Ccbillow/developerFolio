@@ -1,4 +1,4 @@
-import React, {useContext} from "react";
+import React, {useContext, useState, useEffect} from "react";
 import Headroom from "react-headroom";
 import "./Header.scss";
 import ToggleSwitch from "../ToggleSwitch/ToggleSwitch";
@@ -18,15 +18,38 @@ import {
 
 function Header() {
   const {isDark} = useContext(StyleContext);
-  const viewExperience = workExperiences.display;
-  const viewOpenSource = openSource.display;
-  const viewSkills = skillsSection.display;
-  const viewTechStack = techStackSection.display;
-  const viewProjects = bigProjects.display;
-  const viewAchievement = achievementSection.display;
-  const viewBlog = blogSection.display;
-  const viewTalks = talkSection.display;
-  const viewResume = resumeSection.display;
+  const [activeSection, setActiveSection] = useState("");
+
+  const navItems = [
+    {id: "skills",       label: "Skills",       show: skillsSection.display},
+    {id: "techstack",    label: "Tech Stack",   show: techStackSection.display},
+    {id: "experience",   label: "Experience",   show: workExperiences.display},
+    {id: "opensource",   label: "Open Source",  show: bigProjects.display},
+    {id: "achievements", label: "Achievements", show: achievementSection.display},
+    {id: "blogs",        label: "Blogs",        show: blogSection.display},
+    {id: "talks",        label: "Talks",        show: talkSection.display},
+    {id: "resume",       label: "Resume",       show: resumeSection.display},
+    {id: "contact",      label: "Contact Me",   show: true},
+  ];
+
+  useEffect(() => {
+    const sectionEls = navItems
+      .filter(item => item.show)
+      .map(item => document.getElementById(item.id))
+      .filter(Boolean);
+
+    const observer = new IntersectionObserver(
+      entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) setActiveSection(entry.target.id);
+        });
+      },
+      {rootMargin: "-10% 0px -80% 0px", threshold: 0}
+    );
+
+    sectionEls.forEach(el => observer.observe(el));
+    return () => observer.disconnect();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <Headroom>
@@ -45,49 +68,16 @@ function Header() {
           <span className={isDark ? "navicon navicon-dark" : "navicon"}></span>
         </label>
         <ul className={isDark ? "dark-menu menu" : "menu"}>
-          {viewSkills && (
-            <li>
-              <a href="#skills">Skills</a>
+          {navItems.filter(item => item.show).map(item => (
+            <li key={item.id}>
+              <a
+                href={`#${item.id}`}
+                className={activeSection === item.id ? "nav-active" : ""}
+              >
+                {item.label}
+              </a>
             </li>
-          )}
-          {viewTechStack && (
-            <li>
-              <a href="#techstack">Tech Stack</a>
-            </li>
-          )}
-          {viewExperience && (
-            <li>
-              <a href="#experience">Work Experiences</a>
-            </li>
-          )}
-          {viewProjects && (
-            <li>
-              <a href="#opensource">Open Source</a>
-            </li>
-          )}
-          {viewAchievement && (
-            <li>
-              <a href="#achievements">Achievements</a>
-            </li>
-          )}
-          {viewBlog && (
-            <li>
-              <a href="#blogs">Blogs</a>
-            </li>
-          )}
-          {viewTalks && (
-            <li>
-              <a href="#talks">Talks</a>
-            </li>
-          )}
-          {viewResume && (
-            <li>
-              <a href="#resume">Resume</a>
-            </li>
-          )}
-          <li>
-            <a href="#contact">Contact Me</a>
-          </li>
+          ))}
           <li>
             {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
             <a>
