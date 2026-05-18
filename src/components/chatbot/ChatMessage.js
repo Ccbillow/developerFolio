@@ -20,58 +20,86 @@ function parseMarkdown(text) {
       return [<pre key={`pre-${si}`} className={styles.codeBlock}><code>{inner}</code></pre>];
     }
 
-    const lines = seg.split("\n");
-    const result = [];
-    let bulletItems = [];
+    // Split on double newlines to get paragraph blocks; filter blanks
+    const blocks = seg.split(/\n\n+/).filter(b => b.trim() !== "");
+    const multiBlock = blocks.length > 1;
 
-    const flushBullets = key => {
-      if (bulletItems.length === 0) return;
-      result.push(
-        <ul key={`ul-${key}`} className={styles.bulletList}>
-          {bulletItems.map((item, i) => (
-            <li key={i}>{parseInline(item, `${key}-${i}`)}</li>
-          ))}
-        </ul>
-      );
-      bulletItems = [];
-    };
+    return blocks.flatMap((block, pi) => {
+      const lines = block.split("\n");
+      const result = [];
+      let listItems = [];
+      let listType = null; // "ul" | "ol"
 
-    lines.forEach((line, li) => {
-      if (line.startsWith("- ") || line.startsWith("* ")) {
-        bulletItems.push(line.slice(2));
-      } else {
-        flushBullets(`${si}-${li}`);
+      const flushList = key => {
+        if (listItems.length === 0) return;
+        const Tag = listType === "ol" ? "ol" : "ul";
+        const cls = listType === "ol" ? styles.orderedList : styles.bulletList;
         result.push(
-          <React.Fragment key={`l-${si}-${li}`}>
-            {parseInline(line, `${si}-${li}`)}
-            {li < lines.length - 1 && <br />}
-          </React.Fragment>
+          <Tag key={`list-${key}`} className={cls}>
+            {listItems.map((item, i) => (
+              <li key={i}>{parseInline(item, `${key}-${i}`)}</li>
+            ))}
+          </Tag>
         );
-      }
-    });
-    flushBullets(`${si}-end`);
+        listItems = [];
+        listType = null;
+      };
 
-    return result;
+      lines.forEach((line, li) => {
+        if (line.startsWith("- ") || line.startsWith("* ")) {
+          if (listType === "ol") flushList(`${si}-${pi}-${li}`);
+          listType = "ul";
+          listItems.push(line.slice(2));
+        } else if (/^\d+\. /.test(line)) {
+          if (listType === "ul") flushList(`${si}-${pi}-${li}`);
+          listType = "ol";
+          listItems.push(line.replace(/^\d+\. /, ""));
+        } else {
+          flushList(`${si}-${pi}-${li}`);
+          result.push(
+            <React.Fragment key={`l-${si}-${pi}-${li}`}>
+              {parseInline(line, `${si}-${pi}-${li}`)}
+              {li < lines.length - 1 && <br />}
+            </React.Fragment>
+          );
+        }
+      });
+      flushList(`${si}-${pi}-end`);
+
+      if (result.length === 0) return [];
+      if (!multiBlock) return result;
+      return [<div key={`p-${si}-${pi}`} className={styles.para}>{result}</div>];
+    });
   });
 }
 
-export default function ChatMessage({message, isDark}) {
+export default function ChatMessage({message, isDark, onRetry}) {
   const isUser = message.role === "user";
 
   return (
     <div className={`${styles.msg} ${isUser ? styles.msgUser : styles.msgAssistant}`}>
       {!isUser && <img src="/robot.svg" alt="AI" className={styles.msgAvatar} />}
-      <div
-        className={[
-          styles.bubble,
-          isUser ? styles.bubbleUser : styles.bubbleAI,
-          isDark && !isUser ? styles.bubbleAIDark : "",
-          message.error ? styles.bubbleError : ""
-        ].join(" ")}
-      >
-        {parseMarkdown(message.text)}
-        {message.streaming && message.text.length > 0 && (
-          <span className={styles.cursor}>▋</span>
+      <div className={styles.bubbleWrapper}>
+        <div
+          className={[
+            styles.bubble,
+            isUser ? styles.bubbleUser : styles.bubbleAI,
+            isDark && !isUser ? styles.bubbleAIDark : "",
+            message.error ? styles.bubbleError : ""
+          ].join(" ")}
+        >
+          {parseMarkdown(message.text)}
+          {message.streaming && message.text.length > 0 && (
+            <span className={styles.cursor}>▋</span>
+          )}
+        </div>
+        {message.error && onRetry && (
+          <button
+            className={`${styles.retryBtn} ${isDark ? styles.retryBtnDark : ""}`}
+            onClick={onRetry}
+          >
+            ↩ Retry
+          </button>
         )}
       </div>
     </div>

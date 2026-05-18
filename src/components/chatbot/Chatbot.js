@@ -10,6 +10,12 @@ const API_URL =
   (process.env.REACT_APP_API_URL || "http://localhost:8080") + "/api/chat/stream";
 const WELCOME =
   "Hi! I'm Tao's AI assistant 👋 Ask me anything about his background, skills, projects, or experience.";
+const QUICK_REPLIES = [
+  "What's your tech stack?",
+  "How does the AI Project work?",
+  "What are your main strengths as a software engineer?",
+  "What was the biggest technical challenge at Alipay?"
+];
 
 export default function Chatbot() {
   const {isDark} = useContext(StyleContext);
@@ -17,14 +23,34 @@ export default function Chatbot() {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [isStreaming, setIsStreaming] = useState(false);
+  const [showPulse, setShowPulse] = useState(false);
+  const [showScrollBtn, setShowScrollBtn] = useState(false);
   const messagesEndRef = useRef(null);
+  const messagesContainerRef = useRef(null);
+  const wasAtBottomRef = useRef(true);
   const inputRef = useRef(null);
   const hasGreeted = useRef(false);
   const sessionIdRef = useRef(crypto.randomUUID());
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({behavior: "smooth"});
+    if (wasAtBottomRef.current) {
+      messagesEndRef.current?.scrollIntoView({behavior: "smooth"});
+    }
   }, [messages]);
+
+  const handleMessagesScroll = useCallback(() => {
+    const el = messagesContainerRef.current;
+    if (!el) return;
+    const dist = el.scrollHeight - el.scrollTop - el.clientHeight;
+    wasAtBottomRef.current = dist < 80;
+    setShowScrollBtn(dist > 80);
+  }, []);
+
+  const scrollToBottom = useCallback(() => {
+    messagesEndRef.current?.scrollIntoView({behavior: "smooth"});
+    setShowScrollBtn(false);
+    wasAtBottomRef.current = true;
+  }, []);
 
   const open = useCallback(() => {
     setIsOpen(true);
@@ -45,6 +71,15 @@ export default function Chatbot() {
     return () => window.removeEventListener("keydown", onKey);
   }, [close]);
 
+  useEffect(() => {
+    const t = setTimeout(() => setShowPulse(true), 30000);
+    return () => clearTimeout(t);
+  }, []);
+
+  useEffect(() => {
+    if (isOpen) setShowPulse(false);
+  }, [isOpen]);
+
   const finishStreaming = useCallback(() => {
     setIsStreaming(false);
     setMessages(prev => {
@@ -55,8 +90,7 @@ export default function Chatbot() {
     setTimeout(() => inputRef.current?.focus(), 50);
   }, []);
 
-  const send = async () => {
-    const q = input.trim();
+  const sendMessage = async q => {
     if (!q || isStreaming) return;
 
     setMessages(prev => [
@@ -67,11 +101,16 @@ export default function Chatbot() {
     setInput("");
     setIsStreaming(true);
 
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 30000);
+    const finish = () => { clearTimeout(timeoutId); finishStreaming(); };
+
     try {
       const res = await fetch(API_URL, {
         method: "POST",
         headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({question: q, sessionId: sessionIdRef.current})
+        body: JSON.stringify({question: q, sessionId: sessionIdRef.current}),
+        signal: controller.signal
       });
 
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -104,7 +143,7 @@ export default function Chatbot() {
             dataLines = [];
 
             if (currentEvent === "done" || raw.trim() === "[DONE]") {
-              finishStreaming();
+              finish();
               return;
             }
             if (currentEvent === "error") {
@@ -112,7 +151,7 @@ export default function Chatbot() {
                 ...prev.slice(0, -1),
                 {role: "assistant", text: raw.trim()}
               ]);
-              finishStreaming();
+              finish();
               return;
             }
             if (currentEvent === "message") {
@@ -127,19 +166,26 @@ export default function Chatbot() {
           }
         }
       }
-      finishStreaming();
+      finish();
     } catch (err) {
+      clearTimeout(timeoutId);
       setIsStreaming(false);
+      const isTimeout = err.name === "AbortError";
       setMessages(prev => [
         ...prev.slice(0, -1),
         {
           role: "assistant",
-          text: `Sorry, I'm having trouble connecting. Please try again. (${err.message})`,
+          text: isTimeout
+            ? "The request timed out after 30s. Please check your connection and try again."
+            : `Sorry, I'm having trouble connecting. Please try again. (${err.message})`,
           error: true
         }
       ]);
     }
   };
+
+  const send = () => sendMessage(input.trim());
+  const sendQuickReply = q => sendMessage(q);
 
   const onKeyDown = e => {
     if (e.key === "Enter" && !e.shiftKey) {
@@ -156,6 +202,7 @@ export default function Chatbot() {
 
   const showTyping =
     isStreaming && messages[messages.length - 1]?.text === "";
+  const showChips = messages.length === 1 && !isStreaming;
 
   return (
     <>
@@ -175,8 +222,20 @@ export default function Chatbot() {
             <div>
               <div className={styles.headerTitle}>Ask Tao's AI</div>
               <div className={styles.headerSub}>
-                <span className={styles.statusDot} />
-                Ready to chat
+                <span
+                  className={[
+                    styles.statusDot,
+                    isStreaming ? styles.statusDotStreaming : ""
+                  ].join(" ")}
+                />
+                {isStreaming ? (
+                  <>
+                    Typing
+                    <span className={styles.dot1}>.</span>
+                    <span className={styles.dot2}>.</span>
+                    <span className={styles.dot3}>.</span>
+                  </>
+                ) : "Ready to chat"}
               </div>
             </div>
           </div>
@@ -190,10 +249,36 @@ export default function Chatbot() {
         </div>
 
         {/* Messages */}
-        <div className={`${styles.messages} ${isDark ? styles.messagesDark : ""}`}>
+        <div
+          ref={messagesContainerRef}
+          onScroll={handleMessagesScroll}
+          className={`${styles.messages} ${isDark ? styles.messagesDark : ""}`}
+        >
           {messages.map((msg, i) => (
-            <ChatMessage key={i} message={msg} isDark={isDark} />
+            <ChatMessage
+                key={i}
+                message={msg}
+                isDark={isDark}
+                onRetry={msg.error ? () => {
+                  const prev = messages.slice(0, i).reverse().find(m => m.role === "user");
+                  if (prev) sendMessage(prev.text);
+                } : undefined}
+              />
           ))}
+          {showChips && (
+            <div className={styles.chipsContainer}>
+              {QUICK_REPLIES.map((q, i) => (
+                <button
+                  key={q}
+                  className={`${styles.chip} ${isDark ? styles.chipDark : ""}`}
+                  style={{animationDelay: `${i * 0.07}s`}}
+                  onClick={() => sendQuickReply(q)}
+                >
+                  {q}
+                </button>
+              ))}
+            </div>
+          )}
           {showTyping && (
             <div className={`${styles.typing} ${isDark ? styles.typingDark : ""}`}>
               <span />
@@ -203,6 +288,17 @@ export default function Chatbot() {
           )}
           <div ref={messagesEndRef} />
         </div>
+
+        {/* Scroll-to-bottom */}
+        {showScrollBtn && (
+          <button
+            className={`${styles.scrollToBottomBtn} ${isDark ? styles.scrollToBottomBtnDark : ""}`}
+            onClick={scrollToBottom}
+            aria-label="Scroll to latest message"
+          >
+            {isStreaming ? "↓ 新消息" : "↓"}
+          </button>
+        )}
 
         {/* Input */}
         <div className={`${styles.footer} ${isDark ? styles.footerDark : ""}`}>
@@ -232,10 +328,19 @@ export default function Chatbot() {
 
       {/* FAB */}
       <button
-        className={`${styles.fab} ${isOpen ? styles.fabActive : ""}`}
+        className={[
+          styles.fab,
+          isOpen ? styles.fabActive : "",
+          isDark ? styles.fabDark : ""
+        ].join(" ")}
         onClick={isOpen ? close : open}
+        onMouseEnter={() => setShowPulse(false)}
         aria-label="Toggle AI chat"
       >
+        <span className={styles.fabTooltip}>Chat with Tao's AI</span>
+        {showPulse && !isOpen && (
+          <span className={styles.fabPulseRing} />
+        )}
         <Lottie
           animationData={chatbotAnimation}
           loop={true}
