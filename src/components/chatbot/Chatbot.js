@@ -25,6 +25,7 @@ export default function Chatbot() {
   const [isStreaming, setIsStreaming] = useState(false);
   const [showPulse, setShowPulse] = useState(false);
   const [showScrollBtn, setShowScrollBtn] = useState(false);
+  const [panelBottom, setPanelBottom] = useState(0);
   const messagesEndRef = useRef(null);
   const messagesContainerRef = useRef(null);
   const wasAtBottomRef = useRef(true);
@@ -78,6 +79,22 @@ export default function Chatbot() {
 
   useEffect(() => {
     if (isOpen) setShowPulse(false);
+  }, [isOpen]);
+
+  useEffect(() => {
+    const vv = window.visualViewport;
+    if (!vv || !isOpen) { setPanelBottom(0); return; }
+    const update = () => {
+      setPanelBottom(Math.max(0, window.innerHeight - vv.height - vv.offsetTop));
+    };
+    vv.addEventListener("resize", update);
+    vv.addEventListener("scroll", update);
+    update();
+    return () => {
+      vv.removeEventListener("resize", update);
+      vv.removeEventListener("scroll", update);
+      setPanelBottom(0);
+    };
   }, [isOpen]);
 
   const finishStreaming = useCallback(() => {
@@ -214,6 +231,7 @@ export default function Chatbot() {
           isOpen ? styles.panelOpen : "",
           isDark ? styles.panelDark : ""
         ].join(" ")}
+        style={panelBottom > 0 ? {bottom: panelBottom} : undefined}
       >
         {/* Header */}
         <div className={styles.header}>
