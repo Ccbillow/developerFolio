@@ -33,10 +33,10 @@ export default function Chatbot() {
   const sessionIdRef = useRef(crypto.randomUUID());
 
   useEffect(() => {
-    if (wasAtBottomRef.current) {
+    if (isStreaming || wasAtBottomRef.current) {
       messagesEndRef.current?.scrollIntoView({behavior: "smooth"});
     }
-  }, [messages]);
+  }, [messages, isStreaming]);
 
   const handleMessagesScroll = useCallback(() => {
     const el = messagesContainerRef.current;
@@ -72,9 +72,16 @@ export default function Chatbot() {
   }, [close]);
 
   useEffect(() => {
-    const t = setTimeout(() => setShowPulse(true), 30000);
-    return () => clearTimeout(t);
+    const id = setInterval(() => setShowPulse(true), 10000);
+    return () => clearInterval(id);
   }, []);
+
+  // Auto-hide pulse after 3 rings (~2.4s)
+  useEffect(() => {
+    if (!showPulse) return;
+    const t = setTimeout(() => setShowPulse(false), 4800);
+    return () => clearTimeout(t);
+  }, [showPulse]);
 
   useEffect(() => {
     if (isOpen) setShowPulse(false);
@@ -116,6 +123,7 @@ export default function Chatbot() {
     ]);
     setInput("");
     setIsStreaming(true);
+    wasAtBottomRef.current = true;
 
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 30000);

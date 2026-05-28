@@ -74,7 +74,7 @@
   height: 72px;
   border-radius: 50%;
   border: 2.5px solid rgba(21, 101, 192, 0.6);
-  animation: fabPulse 2.4s ease-out infinite;
+  animation: fabPulse 1.6s ease-out 3;
   pointer-events: none;
 }
 

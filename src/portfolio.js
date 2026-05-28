@@ -218,7 +218,7 @@ const techStackSection = {
     {
       label: "Architecture & Tools",
       techs: [
-        {name: "Microservices", img: "/tech/microservice.svg"},
+        {name: "Microservices", img: "/tech/microservices.svg"},
         {name: "RESTful API",   img: "/tech/restapi.svg"},
         {name: "Maven",         img: "/tech/maven.svg"},
         {name: "Postman",       img: "/tech/postman.svg"},
@@ -239,7 +239,7 @@ const techStackSection = {
         {name: "RAG",               img: "/tech/rag.svg"},
         {name: "Cohere",            img: "/tech/cohere.svg"},
         {name: "Hybrid Search",     img: "/tech/hybridsearch.svg"},
-        {name: "Prompt Engineering",img: "/tech/prompt.svg"}
+        {name: "Prompt",            img: "/tech/prompt.svg"}
       ]
     }
   ]

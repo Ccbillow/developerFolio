@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" xml:space="preserve" enable-background="new 0 0 32 32" id="Microservices-1--Streamline-Carbon" height="16" width="16">
+  <desc>
+    Microservices 1 Streamline Icon: https://streamlinehq.com
+  </desc>
+  <switch>
+    <g>
+      <path d="m5.5 10.5 -2 -1.1v-2.25l2 -1.1 2 1.1v2.25L5.5 10.5zm-1 -1.7 1 0.55 1 -0.55v-1.1l-1 -0.55 -1 0.55v1.1zM3 15l-2 -1.1v-2.25L3 10.5l2 1.1v2.25L3 15zm-1 -1.7 1 0.55 1 -0.55v-1.1l-1 -0.55 -1 0.55v1.1zM8 15l-2 -1.1v-2.25l2 -1.1 2 1.1v2.25L8 15zm-1 -1.7 1 0.55 1 -0.55v-1.1l-1 -0.55 -1 0.55v1.1zM13 15l-2 -1.1v-2.25l2 -1.1 2 1.1v2.25L13 15zm-1 -1.7 1 0.55 1 -0.55v-1.1l-1 -0.55 -1 0.55v1.1zm0.3 -7.5L11 7.1V4.7l1.5 -0.85V1.6L10.5 0.5l-2 1.1v2.25l1.5 0.85v2.35l-1.3 -1.3L8 6.5l2.5 2.5 2.5 -2.5 -0.7 -0.7zM9.5 2.2l1 -0.55 1 0.55v1.1l-1 0.55 -1 -0.55V2.2z" fill="#2084e2" stroke-width="0.5"></path>
+      <path d="M0 0h16v16H0z" fill="none" stroke-width="0.5"></path>
+    </g>
+  </switch>
+</svg>
