@@ -3,6 +3,7 @@ import "./Skills.scss";
 import SoftwareSkill from "../../components/softwareSkills/SoftwareSkill";
 import {illustration, skillsSection} from "../../portfolio";
 import {Fade} from "react-reveal";
+import emoji from "react-easy-emoji";
 import codingPerson from "../../assets/lottie/codingPerson";
 import DisplayLottie from "../../components/displayLottie/DisplayLottie";
 import StyleContext from "../../contexts/StyleContext";
@@ -46,17 +47,15 @@ export default function Skills() {
             <SoftwareSkill />
             <div>
               {skillsSection.skills.map((skills, i) => {
+                const text = typeof skills === "string" ? skills : String(skills);
+                const match = text.match(/^(\P{L}\P{N}\s*)(.*)/u);
+                const emojiPart = match ? match[1] : "";
+                const content = match ? match[2] : text;
                 return (
-                  <p
-                    key={i}
-                    className={
-                      isDark
-                        ? "dark-mode subTitle skills-text"
-                        : "subTitle skills-text"
-                    }
-                  >
-                    {skills}
-                  </p>
+                  <div key={i} className="skills-item">
+                    <span className="skills-emoji">{emoji(emojiPart)}</span>
+                    <span className="skills-item-text">{content}</span>
+                  </div>
                 );
               })}
             </div>

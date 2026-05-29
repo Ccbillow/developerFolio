@@ -1,286 +1,249 @@
-.experience-container {
+@import "../../_globalColor";
+
+/* ── Wrapper ─────────────────────────────────── */
+
+.exp-wrap {
   width: 90%;
-  padding: 20px 10px;
   margin: 0 auto;
+  padding: 20px 10px;
   margin-top: 2rem;
 }
 
-.experience-heading {
+.exp-heading {
   font-size: 56px;
   font-weight: 400;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
 }
 
-/* ── Timeline layout ─────────────────────────── */
+/* ── SVG Road ────────────────────────────────── */
 
-.experience-timeline-layout {
-  display: flex;
-  gap: 3rem;
-  align-items: flex-start;
+.exp-road-svg {
+  display: block;
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto 0.2rem;
 }
 
-/* Left column */
-.experience-timeline {
-  position: relative;
-  flex: 0 0 220px;
-  display: flex;
-  flex-direction: column;
-}
+/* ── Pin group ───────────────────────────────── */
 
-.timeline-track {
-  position: absolute;
-  left: 7px;
-  top: 10px;
-  bottom: 10px;
-  width: 2px;
-  background: #e0e0e0;
-  z-index: 0;
-}
-
-.timeline-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 14px;
-  padding: 14px 0;
+.exp-pin-group {
   cursor: pointer;
-  position: relative;
-  z-index: 1;
-  transition: opacity 0.2s;
-}
+  transition: filter 0.2s;
 
-.timeline-item:not(.active) {
-  opacity: 0.5;
-}
-
-.timeline-item:not(.active):hover {
-  opacity: 0.8;
-}
-
-.timeline-dot {
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background: #ccc;
-  flex-shrink: 0;
-  margin-top: 3px;
-  transition: background 0.2s, transform 0.2s;
-}
-
-.timeline-item.active .timeline-dot {
-  background: #1565c0;
-  transform: scale(1.2);
-}
-
-.timeline-info {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-}
-
-.timeline-company {
-  font-weight: 600;
-  font-size: 1.05rem;
-  line-height: 1.3;
-}
-
-.timeline-date {
-  font-size: 0.88rem;
-  color: #999;
-}
-
-/* Right column */
-.experience-detail {
-  flex: 1;
-  background: #f8f9fa;
-  border-radius: 16px;
-  padding: 2rem;
-  min-height: 320px;
-}
-
-.detail-inner {
-  animation: detailFadeIn 0.22s ease both;
-}
-
-@keyframes detailFadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+  &:hover {
+    filter: brightness(1.1);
   }
 }
 
-.dark-card {
+/* ── Pin scale-up on active ──────────────────── */
+
+.exp-pin-scaler {
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transform: scale(1);
+}
+
+.exp-pin-scaler-active {
+  transform: scale(1.15);
+}
+
+/* ── Ripple pulse rings ──────────────────────── */
+
+.exp-ripple {
+  animation: rippleOut 1.5s ease-out infinite;
+}
+
+.exp-ripple-2 {
+  animation-delay: 0.75s;
+}
+
+@keyframes rippleOut {
+  0%   { r: 22; opacity: 0.55; }
+  100% { r: 44; opacity: 0; }
+}
+
+/* ── Single detail card ──────────────────────── */
+
+.exp-detail {
+  border-radius: 12px;
+  padding: 2rem 2.2rem;
+  border: 0.5px solid #e0e0e0;
+  background: #fff;
+  max-width: 960px;
+  margin: 0 auto;
+  animation: expFadeIn 0.3s ease both;
+}
+
+.exp-detail-dark {
   background: #1e1e2e;
+  border-color: #2a2a4a;
 }
 
-.detail-header {
+@keyframes expFadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Detail header ───────────────────────────── */
+
+.exp-detail-header {
   display: flex;
   align-items: center;
-  gap: 1.5rem;
+  gap: 16px;
   margin-bottom: 1.2rem;
+  padding-bottom: 1.2rem;
+  border-bottom: 0.5px solid #e0e0e0;
 }
 
-.detail-logo {
-  width: 60px;
-  height: 60px;
-  object-fit: contain;
-  border-radius: 8px;
-  background: #fff;
-  padding: 4px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+.exp-detail-dark .exp-detail-header {
+  border-bottom-color: #2a2a4a;
 }
 
-.detail-header-text {
+.exp-detail-icon-wrap {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
   display: flex;
-  flex-direction: column;
-  gap: 2px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: rgba(21, 101, 192, 0.08);
 }
 
-.detail-role {
-  font-size: 1.45rem;
+.exp-detail-dark .exp-detail-icon-wrap {
+  background: rgba(59, 130, 246, 0.15);
+}
+
+.exp-detail-role {
+  font-size: 1.35rem;
   font-weight: 700;
-  margin: 0;
+  color: #000;
 }
 
-.detail-company {
-  font-size: 1.15rem;
-  font-weight: 500;
-  margin: 0;
-  color: #b45309;
+.exp-detail-dark .exp-detail-role {
+  color: #fff;
 }
 
-.detail-date {
+.exp-detail-company {
+  font-size: 1.05rem;
+  color: #868e96;
+  margin-top: 3px;
+}
+
+.exp-detail-period {
   font-size: 1rem;
-  color: #999;
+  margin-top: 4px;
+  font-weight: 500;
+  color: #1565c0;
 }
 
-.detail-desc {
-  font-size: 1.12rem;
-  line-height: 1.7;
-  margin-bottom: 1rem;
-  color: #555;
+.exp-detail-dark .exp-detail-period {
+  color: #60a5fa;
 }
 
-.dark-card .detail-desc {
-  color: #bbb;
+/* ── Tech tags ───────────────────────────────── */
+
+.exp-detail-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 1.4rem;
 }
 
-.detail-bullets {
-  padding-left: 1.2rem;
+.exp-detail-tag {
+  font-size: 0.85rem;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-weight: 600;
+  background: rgba(21, 101, 192, 0.08);
+  color: #1565c0;
+}
+
+.exp-detail-dark .exp-detail-tag {
+  background: rgba(59, 130, 246, 0.15);
+  color: #93c5fd;
+}
+
+/* ── Bullets ─────────────────────────────────── */
+
+.exp-detail-bullets {
+  list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 14px;
 }
 
-.detail-bullets li {
-  font-size: 1.10rem;
-  line-height: 1.7;
-  color: #444;
+.exp-detail-bullets li {
+  display: flex;
+  gap: 10px;
+  font-size: 1.05rem;
+  color: #000;
+  line-height: 1.6;
 }
 
-.dark-card .detail-bullets li {
+/* ── Company tag labels (e.g. [OCBC] [Sanofi]) ──── */
+
+.exp-company-tag {
+  display: inline;
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-right: 0.15rem;
+  color: #868e96;
+}
+
+.exp-detail-dark .exp-company-tag {
+  color: #a0a4b0;
+}
+
+.exp-detail-bullets li::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 7px;
+  background: #1565c0;
+}
+
+.exp-detail-dark .exp-detail-bullets li {
   color: #ccc;
 }
 
-/* ── Tech Tags ───────────────────────────────── */
-
-.detail-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-top: 1.4rem;
-}
-
-.detail-tag {
-  display: inline-block;
-  padding: 0.25rem 0.75rem;
-  border-radius: 20px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  background: #e8f0fe;
-  color: #1565c0;
-  letter-spacing: 0.02em;
-  cursor: default;
-  transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease,
-    box-shadow 0.2s ease;
-}
-
-.detail-tag:hover {
-  background: #1565c0;
-  color: #fff;
-  transform: translateY(-3px);
-  box-shadow: 0 4px 12px rgba(21, 101, 192, 0.35);
-}
-
-.detail-tag.dark-tag {
-  background: #1a2a4a;
-  color: #90caf9;
-}
-
-.detail-tag.dark-tag:hover {
-  background: #1565c0;
-  color: #fff;
-  transform: translateY(-3px);
-  box-shadow: 0 4px 12px rgba(21, 101, 192, 0.5);
+.exp-detail-dark .exp-detail-bullets li::before {
+  background: #60a5fa;
 }
 
 /* ── Responsive ──────────────────────────────── */
 
 @media (max-width: 1380px) {
-  .experience-heading {
+  .exp-heading {
     font-size: 40px;
   }
 }
 
 @media (max-width: 768px) {
-  .experience-heading {
+  .exp-heading {
     font-size: 30px;
     text-align: center;
   }
 
-  .experience-timeline-layout {
-    flex-direction: column;
-    gap: 1.5rem;
+  .exp-road-svg {
+    margin-bottom: 1.2rem;
   }
 
-  .experience-timeline {
-    flex: unset;
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-  }
-
-  .timeline-track {
-    display: none;
-  }
-
-  .timeline-item {
-    padding: 8px 14px;
-    border-radius: 20px;
-    background: #f0f0f0;
-    gap: 0;
-  }
-
-  .timeline-item.active {
-    background: #1565c0;
-  }
-
-  .timeline-item.active .timeline-company {
-    color: #fff;
-  }
-
-  .timeline-dot {
-    display: none;
-  }
-
-  .timeline-date {
-    display: none;
-  }
-
-  .experience-detail {
+  .exp-detail {
     padding: 1.2rem;
+  }
+
+  .exp-detail-role {
+    font-size: 1.1rem;
+  }
+
+  .exp-detail-header {
+    gap: 12px;
+  }
+
+  .exp-detail-icon-wrap {
+    width: 42px;
+    height: 42px;
   }
 }

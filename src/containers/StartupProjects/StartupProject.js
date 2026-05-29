@@ -2,6 +2,7 @@ import React, {useContext} from "react";
 import "./StartupProjects.scss";
 import {bigProjects} from "../../portfolio";
 import {Fade} from "react-reveal";
+import emoji from "react-easy-emoji";
 import StyleContext from "../../contexts/StyleContext";
 
 export default function StartupProject() {
@@ -59,18 +60,23 @@ export default function StartupProject() {
                       <i className="fas fa-laptop-code card-title-icon"></i>{" "}
                       {project.projectName}
                     </h5>
-                    <p
+                    <div
                       className={
                         isDark ? "dark-mode card-subtitle" : "card-subtitle"
                       }
                     >
-                      {project.projectDesc.split("\n").map((line, idx, arr) => (
-                        <React.Fragment key={idx}>
-                          {line}
-                          {idx < arr.length - 1 && <br />}
-                        </React.Fragment>
-                      ))}
-                    </p>
+                      {project.projectDesc.split("\n").map((line, idx) => {
+                        const match = line.match(/^(\P{L}\P{N}\s*)(.*)/u);
+                        const emojiPart = match ? match[1] : "";
+                        const content = match ? match[2] : line;
+                        return (
+                          <div key={idx} className="open-source-desc-item">
+                            <span className="open-source-desc-emoji">{emoji(emojiPart)}</span>
+                            <span className="open-source-desc-text">{content}</span>
+                          </div>
+                        );
+                      })}
+                    </div>
                     {project.footerLink ? (
                       <div className="project-card-footer">
                         {project.footerLink.map((link, i) => {

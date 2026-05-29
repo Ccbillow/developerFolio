@@ -49,15 +49,9 @@ const skillsSection = {
   title: "What I Do",
   subTitle: "BACKEND ENGINEER BY TRAINING, AI BUILDER BY CHOICE",
   skills: [
-    emoji(
-      "⚡ Build Java microservices — from architecture to production reliability"
-    ),
-    emoji(
-      "⚡ Design and ship production RAG systems — hybrid search, reranking, streaming, and LLM integration"
-    ),
-    emoji(
-      "⚡ Write clean, testable code across backend services"
-    )
+    "⚡ Build Java microservices — from architecture to production reliability",
+    "⚡ Design and ship production RAG systems — hybrid search, reranking, streaming, and LLM integration",
+    "⚡ Write clean, testable code across backend services"
   ],
 
   softwareSkills: [
@@ -392,8 +386,8 @@ const resumeSection = {
 // Contact
 
 const contactInfo = {
-  title: emoji("Reach Out to me!"),
-  subtitle: "Open to Senior Java / AI Engineer roles in Australia. Happy to chat.",
+  title: emoji("Reach Out To Me!"),
+  subtitle: "Open to Senior Java / AI Engineer roles in Australia.\nHappy to chat.",
   number: "",
   email_address: "ctaoaoo@gmail.com"
 };

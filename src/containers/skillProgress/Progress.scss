@@ -1,90 +1,222 @@
 @import "../../_globalColor";
 
-.meter {
-  height: 20px;
-  position: relative;
-  background: $progressBarBackground;
-  -moz-border-radius: 25px;
-  -webkit-border-radius: 25px;
-  border-radius: 25px;
-}
-.meter > span {
-  display: block;
-  height: 100%;
-  width: 0;
-  border-top-right-radius: 6px;
-  border-bottom-right-radius: 6px;
-  border-top-left-radius: 20px;
-  border-bottom-left-radius: 20px;
-  background-color: $progressBarSpanBG;
-  position: relative;
-  overflow: hidden;
-  transition: background-color 0.25s ease, box-shadow 0.25s ease;
-}
+/* ── Container & Heading ───────────────────────── */
 
-.bar-animated {
-  animation: fillBar 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-}
-
-@keyframes fillBar {
-  from { width: 0; }
-  to   { width: var(--target-width); }
-}
-
-.meter:hover > span {
-  background-color: #1565c0;
-  box-shadow: 0 0 10px rgba(21, 101, 192, 0.45);
-}
-.skill {
-  line-height: 3.5vw;
-}
-.skill p {
-  margin-bottom: 0.25rem;
-  line-height: 1.5;
-}
-.skill-bars {
-  font-size: 28px;
-  width: 40%;
-}
-.skills-container {
-  display: flex;
+.skills-circular-container {
   width: 90%;
-  padding: 20px 10px;
-  margin: 0px auto;
-  margin-top: 2rem;
-}
-.skills-container > * {
-  flex: 1;
-  margin-bottom: 30px;
-}
-.skills-image > img {
-  margin-left: 80px;
-  max-width: 90%;
-  height: auto;
+  margin: 0 auto;
+  padding: 60px 10px 100px 10px;
 }
 
-/* Media Query */
+.skills-circular-heading {
+  font-size: 56px;
+  font-weight: 400;
+  margin-bottom: 5rem;
+  text-align: left;
+}
 
-@media (max-width: 1456px) {
-  .skills-bar {
-    line-height: 4rem;
-  }
-  .skills-image {
-    display: none;
-    order: 2;
+/* ── Row of circles ────────────────────────────── */
+
+.circular-blocks-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 5rem 6rem;
+}
+
+/* ── Outer block (SVG + dots container) ────────── */
+
+.circular-block {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 195px;
+  height: 195px;
+  border-radius: 50%;
+  background: rgba(21, 101, 192, 0.04);
+  box-shadow: $lightBoxShadowDark 0px 10px 30px -15px;
+  transition: all 0.3s ease;
+}
+
+.circular-block:hover {
+  box-shadow: $lightBoxShadowDark 0px 20px 30px -10px;
+  transform: translateY(-2px);
+}
+
+/* ── Inner box (white circle with text) ────────── */
+
+.circular-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  width: calc(100% - 50px);
+  height: calc(100% - 50px);
+  border-radius: 50%;
+  background-color: #fff;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.08);
+  z-index: 1;
+}
+
+.circular-box::before {
+  position: absolute;
+  content: "";
+  width: calc(100% + 28px);
+  height: calc(100% + 28px);
+  border-radius: 50%;
+  border: 1px solid #e0e0e0;
+}
+
+/* ── Number & subtitle ─────────────────────────── */
+
+.circular-number {
+  margin: 0;
+  line-height: 1;
+}
+
+.circular-num {
+  font-size: 38px;
+  font-weight: 700;
+  color: #1565c0;
+}
+
+.circular-sub {
+  font-size: 22px;
+  color: #868e96;
+}
+
+.circular-title {
+  font-size: 14px;
+  color: #868e96;
+  text-align: center;
+  margin: 0.35rem 0 0;
+  line-height: 1.35;
+  max-width: 110px;
+  word-break: keep-all;
+}
+
+/* ── Rotating dot ──────────────────────────────── */
+
+.circular-dots {
+  display: block;
+  position: absolute;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+.circular-dots::after {
+  position: absolute;
+  content: "";
+  width: 10px;
+  height: 10px;
+  top: 5px;
+  left: 50%;
+  border-radius: 50%;
+  background-color: #1565c0;
+  box-shadow: 0 0 6px 2px rgba(21, 101, 192, 0.35);
+  transform: translateX(-50%);
+}
+
+/* ── SVG progress ring ─────────────────────────── */
+
+.circular-svg {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  fill: none;
+  transform: rotate(-90deg);
+}
+
+.circular-circle {
+  stroke-width: 14px;
+  stroke-linecap: round;
+}
+
+/* ── Dark mode ──────────────────────────────────── */
+
+.circular-block-dark {
+  background-color: rgba(59, 130, 246, 0.06);
+  box-shadow: 0px 10px 30px -15px $darkBoxShadow;
+}
+
+.circular-block-dark:hover {
+  box-shadow: 0px 20px 30px -10px $darkBoxShadow;
+  transform: translateY(-2px);
+}
+
+.circular-block-dark .circular-box,
+.circular-box-dark {
+  background-color: rgba(59, 130, 246, 0.06);
+}
+
+.circular-block-dark .circular-box,
+.circular-box-dark {
+  background-color: #171c28;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.circular-block-dark .circular-box::before,
+.circular-box-dark::before {
+  border-color: #2a2a4a;
+}
+
+.circular-title-dark {
+  color: #a0a4b0;
+}
+
+.circular-block-dark .circular-sub {
+  color: #a0a4b0;
+}
+
+.circular-block-dark .circular-dots::after {
+  background-color: #90caf9;
+  box-shadow: 0 0 6px 2px rgba(144, 202, 249, 0.4);
+}
+
+/* ── Responsive ─────────────────────────────────── */
+
+@media (max-width: 1380px) {
+  .skills-circular-heading {
+    font-size: 40px;
   }
 }
 
 @media (max-width: 768px) {
-  .skills-container {
-    flex-direction: column;
+  .skills-circular-container {
+    padding-bottom: 60px;
   }
-  .skills-bar {
-    line-height: 3rem;
-    margin: 20px;
+  .skills-circular-heading {
+    font-size: 30px;
   }
-  .skills-image {
-    display: none;
-    order: 2;
+  .circular-blocks-row {
+    gap: 2rem;
+  }
+  .circular-block {
+    width: 150px;
+    height: 150px;
+  }
+  .circular-box {
+    width: calc(100% - 40px);
+    height: calc(100% - 40px);
+  }
+  .circular-box::before {
+    width: calc(100% + 22px);
+    height: calc(100% + 22px);
+  }
+  .circular-num {
+    font-size: 28px;
+  }
+  .circular-sub {
+    font-size: 16px;
+  }
+  .circular-title {
+    font-size: 11px;
+  }
+  .circular-svg {
+    /* scale down SVG to match smaller block */
   }
 }

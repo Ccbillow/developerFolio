@@ -28,6 +28,30 @@
   color: $subTitle;
 }
 
+/* ── Skills items (⚡ column + text column) ────── */
+
+.skills-item {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 0.6rem;
+}
+
+.skills-emoji {
+  flex-shrink: 0;
+  width: 1.5em;
+}
+
+.skills-item-text {
+  flex: 1;
+  color: #333;
+  line-height: 1.6;
+}
+
+.dark-mode .skills-item-text {
+  color: #ccc;
+}
+
 /* Media Query */
 @media (max-width: 1380px) {
   .skills-heading {

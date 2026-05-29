@@ -25,9 +25,36 @@
 }
 .card-subtitle {
   color: $cardSubtitle;
-  font-size: 19px;
-  line-height: 2.0rem;
+  font-size: 17px;
+  line-height: 1.7;
   margin: 0.8rem 0;
+}
+
+.dark-mode .card-subtitle {
+  color: #ccc;
+}
+
+/* ── Description items (emoji col + text col) ──── */
+
+.open-source-desc-item {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 0.85rem;
+}
+
+.open-source-desc-emoji {
+  flex-shrink: 0;
+  width: 1.5em;
+}
+
+.open-source-desc-text {
+  flex: 1;
+  color: $cardSubtitle;
+}
+
+.dark-mode .open-source-desc-text {
+  color: #ccc;
 }
 .project-card {
   display: flex;
@@ -72,8 +99,18 @@
 
 .projects-container {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 1.8rem 1.2rem;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 4rem;
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+  .projects-container {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    max-width: 100%;
+  }
 }
 
 .project-card-footer {

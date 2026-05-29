@@ -12,8 +12,7 @@ import {
   bigProjects,
   blogSection,
   talkSection,
-  achievementSection,
-  resumeSection
+  achievementSection
 } from "../../portfolio";
 
 function Header() {
@@ -28,7 +27,6 @@ function Header() {
     {id: "achievements", label: "Achievements", show: achievementSection.display},
     {id: "blogs",        label: "Blogs",        show: blogSection.display},
     {id: "talks",        label: "Talks",        show: talkSection.display},
-    {id: "resume",       label: "Resume",       show: resumeSection.display},
     {id: "contact",      label: "Contact Me",   show: true},
   ];
 
