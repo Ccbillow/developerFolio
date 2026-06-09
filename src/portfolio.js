@@ -119,7 +119,7 @@ const educationInfo = {
     {
       schoolName: "Chongqing University of Posts and Telecommunications",
       logo: require("./assets/images/CQUPTlogo.png"),
-      subHeader: "Bachelor of Engineering in Software Engineering",
+      subHeader: "Bachelor of Software Engineering",
       duration: "September 2012 – June 2016",
       desc: "Studied core computer science and software engineering fundamentals that laid the foundation for 7+ years of enterprise Java development.",
       descBullets: [
@@ -273,7 +273,7 @@ const workExperiences = {
     },
     {
       role: "Java Software Engineer",
-      company: "SINOSIG (Sunshine Insurance Group)",
+      company: "SINOSIG",
       companylogo: require("./assets/images/sinosigLogo.png"),
       date: "October 2018 – March 2021",
       desc: "Built the Insurance Portal System 0-to-1, digitising the policy lifecycle.",

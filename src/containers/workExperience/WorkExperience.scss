@@ -21,44 +21,66 @@
   display: block;
   width: 100%;
   max-width: 960px;
-  margin: 0 auto 0.2rem;
+  margin: 0 auto;
+}
+
+/* ── Road segment pulse animations ───────────── */
+
+.exp-road-glow {
+  animation: roadGlowPulse 2s ease-in-out infinite;
+}
+
+.exp-road-seg {
+  opacity: 0.65;
+  transition: opacity 0.5s ease;
+}
+
+.exp-road-seg--active {
+  animation: roadSegPulse 2s ease-in-out infinite;
+}
+
+.exp-date-label {
+  opacity: 0.55;
+  transition: opacity 0.5s ease, font-weight 0.5s ease;
+}
+
+.exp-date-label--active {
+  animation: dateLabelPulse 2s ease-in-out infinite;
+}
+
+@keyframes roadGlowPulse {
+  0%, 100% { opacity: 0.12; }
+  30%      { opacity: 0.55; }
+  60%      { opacity: 0.55; }
+}
+
+@keyframes roadSegPulse {
+  0%, 100% { opacity: 0.72; }
+  30%      { opacity: 1; }
+  60%      { opacity: 1; }
+}
+
+@keyframes dateLabelPulse {
+  0%, 100% { opacity: 0.55; }
+  30%      { opacity: 1; }
+  60%      { opacity: 1; }
+}
+
+/* ── Pin float animation ─────────────────────── */
+
+.exp-pin-float {
+  animation: pinFloat 2s ease-in-out infinite;
+}
+
+@keyframes pinFloat {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-5px); }
 }
 
 /* ── Pin group ───────────────────────────────── */
 
 .exp-pin-group {
   cursor: pointer;
-  transition: filter 0.2s;
-
-  &:hover {
-    filter: brightness(1.1);
-  }
-}
-
-/* ── Pin scale-up on active ──────────────────── */
-
-.exp-pin-scaler {
-  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
-  transform: scale(1);
-}
-
-.exp-pin-scaler-active {
-  transform: scale(1.15);
-}
-
-/* ── Ripple pulse rings ──────────────────────── */
-
-.exp-ripple {
-  animation: rippleOut 1.5s ease-out infinite;
-}
-
-.exp-ripple-2 {
-  animation-delay: 0.75s;
-}
-
-@keyframes rippleOut {
-  0%   { r: 22; opacity: 0.55; }
-  100% { r: 44; opacity: 0; }
 }
 
 /* ── Single detail card ──────────────────────── */
@@ -70,17 +92,11 @@
   background: #fff;
   max-width: 960px;
   margin: 0 auto;
-  animation: expFadeIn 0.3s ease both;
 }
 
 .exp-detail-dark {
   background: #1e1e2e;
   border-color: #2a2a4a;
-}
-
-@keyframes expFadeIn {
-  from { opacity: 0; transform: translateY(6px); }
-  to   { opacity: 1; transform: translateY(0); }
 }
 
 /* ── Detail header ───────────────────────────── */
@@ -224,10 +240,14 @@
   .exp-heading {
     font-size: 30px;
     text-align: center;
+    margin-bottom: 0.3rem;
   }
 
   .exp-road-svg {
-    margin-bottom: 1.2rem;
+    min-height: 240px;
+    margin-bottom: 0;
+    transform: scale(1.02);
+    transform-origin: center center;
   }
 
   .exp-detail {

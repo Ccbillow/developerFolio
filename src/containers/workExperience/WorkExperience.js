@@ -1,4 +1,4 @@
-import React, {useContext, useState} from "react";
+import React, {useContext, useState, useEffect, useRef} from "react";
 import "./WorkExperience.scss";
 import {workExperiences} from "../../portfolio";
 import {Fade} from "react-reveal";
@@ -46,7 +46,10 @@ function getYearDuration(dateStr) {
 
 /* ── SVG Winding Road ────────────────────────── */
 function RoadSVG({isDark, selectedIndex, onSelect}) {
+  // Newest on the left, oldest on the right (2022–24 → 2017–18)
   const exps = workExperiences.experience;
+  const icons = tabIcons;
+
   const durations = exps.map(e => getYearDuration(e.date));
   const total = durations.reduce((a, b) => a + b, 0);
   const totalLen = 1000;
@@ -77,6 +80,23 @@ function RoadSVG({isDark, selectedIndex, onSelect}) {
   const dashColor = isDark ? "rgba(255,255,255,0.15)" : "rgba(255,255,255,0.7)";
   const colors = isDark ? segColorsDark : segColors;
 
+  // Ripple animation for active pin (float handled by CSS @keyframes)
+  const [ripplePhase, setRipplePhase] = useState(0);
+  const rippleRef = useRef(null);
+
+  useEffect(() => {
+    rippleRef.current = setInterval(() => setRipplePhase(p => (p + 1) % 100), 75);
+    return () => {
+      clearInterval(rippleRef.current);
+    };
+  }, []);
+
+  // Ripple: two rings at different phases
+  const rippleR1 = 22 + (ripplePhase / 100) * 22;
+  const rippleO1 = 0.55 * (1 - ripplePhase / 100);
+  const rippleR2 = 22 + (((ripplePhase + 50) % 100) / 100) * 22;
+  const rippleO2 = 0.55 * (1 - ((ripplePhase + 50) % 100) / 100);
+
   function roadYAtPct(pct) {
     const t = pct / totalLen;
     if (t < 0.25) return 190 + (155 - 190) * (t / 0.25);
@@ -87,20 +107,35 @@ function RoadSVG({isDark, selectedIndex, onSelect}) {
 
   return (
     <svg className="exp-road-svg" viewBox="0 0 960 300" xmlns="http://www.w3.org/2000/svg">
+
       {/* road border */}
       <path d={roadPath} fill="none" stroke={roadStroke} strokeWidth="34" strokeLinecap="round" pathLength={totalLen} />
       {/* road surface */}
       <path d={roadPath} fill="none" stroke={roadFill} strokeWidth="26" strokeLinecap="round" pathLength={totalLen} />
       {/* colored segments */}
-      {segs.map((seg, i) => (
-        <path key={i} d={roadPath} fill="none" stroke={colors[i]} strokeWidth="22" strokeLinecap="round"
-          pathLength={totalLen}
-          strokeDasharray={`${seg} ${totalLen - seg}`}
-          strokeDashoffset={-offsets[i]}
-          opacity={selectedIndex === i ? 1 : 0.7}
-          style={{transition: "opacity 0.3s"}}
-        />
-      ))}
+      {segs.map((seg, i) => {
+        const isActive = selectedIndex === i;
+        return (
+          <React.Fragment key={i}>
+            {/* Glow layer behind active segment — CSS pulse animation */}
+            {isActive && (
+              <path className="exp-road-glow" d={roadPath} fill="none"
+                stroke={colors[i]} strokeWidth="32" strokeLinecap="round"
+                pathLength={totalLen}
+                strokeDasharray={`${seg} ${totalLen - seg}`}
+                strokeDashoffset={-offsets[i]}
+              />
+            )}
+            {/* Main segment — active gets smooth pulse, inactive stays static */}
+            <path className={`exp-road-seg${isActive ? " exp-road-seg--active" : ""}`}
+              d={roadPath} fill="none" stroke={colors[i]} strokeWidth="22" strokeLinecap="round"
+              pathLength={totalLen}
+              strokeDasharray={`${seg} ${totalLen - seg}`}
+              strokeDashoffset={-offsets[i]}
+            />
+          </React.Fragment>
+        );
+      })}
       {/* road dashes (highway style) */}
       <path d={roadPath} fill="none" stroke={dashColor} strokeWidth="1.5" strokeLinecap="round"
         strokeDasharray="16 10" pathLength={totalLen} />
@@ -153,7 +188,7 @@ function RoadSVG({isDark, selectedIndex, onSelect}) {
         const fOuter = isDark ? "#1d4ed8" : "#90caf9";
         const fInner = isDark ? "#2563eb" : "#bbdefb";
         const bushColor = isDark ? "#1d4ed8" : "#90caf9";
-        const rockColor = isDark ? "#334155" : "#cbd5e1";
+        const rockColor = isDark ? "#334155" : "#cbd5e3";
         const trunk = "#7c4a1e";
 
         return (
@@ -207,11 +242,12 @@ function RoadSVG({isDark, selectedIndex, onSelect}) {
       {exps.map((exp, i) => {
         const midPct = (offsets[i] + segs[i] / 2) / totalLen;
         const labelX = 40 + midPct * 880;
+        const isActive = selectedIndex === i;
         return (
           <text key={i} x={labelX} y={228} textAnchor="middle"
-            fontSize="15" fontWeight="600" fill={isDark ? "#93c5fd" : "#1565c0"}
-            opacity={selectedIndex === i ? 1 : 0.6}
-            style={{transition: "opacity 0.3s"}}>
+            fontSize="18" fontWeight={isActive ? "700" : "600"}
+            fill={isDark ? "#93c5fd" : "#1565c0"}
+            className={`exp-date-label${isActive ? " exp-date-label--active" : ""}`}>
             {getYearRange(exp.date)}
           </text>
         );
@@ -226,23 +262,32 @@ function RoadSVG({isDark, selectedIndex, onSelect}) {
         const roadY = roadYAtPct(pos.pct);
 
         return (
-          <g key={i} className={`exp-pin-group${isActive ? " active" : ""}`} onClick={() => onSelect(i)} style={{cursor: "pointer"}}>
+          <g key={i} className={`exp-pin-group${isActive ? " active" : ""}`}
+            onClick={() => onSelect(i)}
+            onTouchStart={() => onSelect(i)}
+            style={{cursor: "pointer"}}>
             {/* connector line */}
             <line x1={pos.x} y1={pinY - 5} x2={pos.x} y2={pinY - 58}
               stroke={isDark ? "#3b82f6" : "#1565c0"} strokeWidth="1.2"
               strokeDasharray="4 3" opacity={isActive ? 0.9 : 0.5} />
-            {/* Pulse ripple rings — only for active pin */}
+            {/* Pulse ripple rings — only for active pin, React-controlled */}
             {isActive && (
               <>
-                <circle className="exp-ripple exp-ripple-1" cx={pos.x} cy={pinY - 78} r="22" fill="none"
-                  stroke={isDark ? "#60a5fa" : "#42a5f5"} strokeWidth="2" />
-                <circle className="exp-ripple exp-ripple-2" cx={pos.x} cy={pinY - 78} r="22" fill="none"
-                  stroke={isDark ? "#60a5fa" : "#42a5f5"} strokeWidth="2" />
+                <circle cx={pos.x} cy={pinY - 78} r={rippleR1} fill="none"
+                  stroke={isDark ? "#60a5fa" : "#42a5f5"} strokeWidth="2"
+                  opacity={rippleO1} />
+                <circle cx={pos.x} cy={pinY - 78} r={rippleR2} fill="none"
+                  stroke={isDark ? "#60a5fa" : "#42a5f5"} strokeWidth="2"
+                  opacity={rippleO2} />
               </>
             )}
-            {/* pin body + tail + icon - grouped at pin center for scaling */}
+            {/* pin body + tail + icon — float animation (CSS) + scale (inline) */}
             <g transform={`translate(${pos.x},${pinY - 78})`}>
-              <g className={`exp-pin-scaler${isActive ? " exp-pin-scaler-active" : ""}`}>
+              <g className={isActive ? "exp-pin-float" : ""}>
+                <g style={{
+                  transform: `scale(${isActive ? 1.5 : 1})`,
+                  transition: "transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1)",
+                }}>
                 {/* pin body */}
                 <circle cx="0" cy="0" r="22" fill={isDark ? "#0c1e3d" : "#fff"} />
                 <circle cx="0" cy="0" r="19" fill={pinColor} />
@@ -251,37 +296,39 @@ function RoadSVG({isDark, selectedIndex, onSelect}) {
                 {/* icon */}
                 <g stroke={isDark ? "#bfdbfe" : "#fff"} strokeWidth="1.6"
                   fill="none" strokeLinecap="round" strokeLinejoin="round">
-                  {tabIcons[i].map((d, j) => (
+                  {icons[i].map((d, j) => (
                     <path key={j} d={d} transform="translate(-12,-11)" />
                   ))}
                 </g>
               </g>
             </g>
+            </g>
             {/* road dot */}
-            <circle cx={pos.x} cy={roadY + 4} r="5" fill="#93c5fd"
+            <circle cx={pos.x} cy={roadY + 4} r={isActive ? "7" : "5"} fill="#93c5fd"
               stroke={isDark ? "#1e293b" : "#fff"} strokeWidth="2" />
             {/* company name above pin */}
-            <text x={pos.x} y={pinY - 108} textAnchor="middle" fontSize="15" fontWeight="700"
+            <text x={pos.x} y={pinY - 120} textAnchor="middle" fontSize="18" fontWeight="700"
               fill={isDark ? "#bfdbfe" : "#1565c0"}>{exp.company}</text>
           </g>
         );
       })}
 
-      {/* Invisible wide clickable road overlay */}
-      <path d={roadPath} fill="none" stroke="transparent" strokeWidth="50" strokeLinecap="round"
-        pathLength={totalLen} style={{cursor: "pointer"}}
-        onClick={(e) => {
-          const svg = e.target.closest("svg");
-          if (!svg) return;
-          const rect = svg.getBoundingClientRect();
-          const x = e.clientX - rect.left;
-          const pct = x / rect.width;
-          const idx = offsets.findIndex((off, j) => {
-            const end = off + segs[j];
-            return pct * totalLen >= off && pct * totalLen < end;
-          });
-          if (idx >= 0) onSelect(idx);
-        }} />
+      {/* Per-segment click targets — each directly calls onSelect with correct index */}
+      {segs.map((seg, i) => (
+        <path key={`road-hit-${i}`} d={roadPath} fill="none"
+          stroke="transparent" strokeWidth="50" strokeLinecap="round"
+          pointerEvents="stroke"
+          pathLength={totalLen}
+          strokeDasharray={`${seg} ${totalLen - seg}`}
+          strokeDashoffset={-offsets[i]}
+          style={{cursor: "pointer"}}
+          onClick={() => onSelect(i)}
+          onTouchEnd={(e) => {
+            e.preventDefault();
+            onSelect(i);
+          }}
+        />
+      ))}
     </svg>
   );
 }
@@ -289,11 +336,12 @@ function RoadSVG({isDark, selectedIndex, onSelect}) {
 /* ── Main component ──────────────────────────── */
 export default function WorkExperience() {
   const {isDark} = useContext(StyleContext);
+  // Newest on left, oldest on right; default select newest (index 0 = 2022–24)
+  const experiences = workExperiences.experience;
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   if (!workExperiences.display) return null;
 
-  const experiences = workExperiences.experience;
   const selected = experiences[selectedIndex];
 
   return (
@@ -310,18 +358,30 @@ export default function WorkExperience() {
           <div className={`exp-detail${isDark ? " exp-detail-dark" : ""}`}>
             <div className="exp-detail-header">
               <div className="exp-detail-icon-wrap">
-                {selectedIndex === 0 ? (
-                  <IconBuildingPlus size={28} stroke={2} color={isDark ? "#60a5fa" : "#1565c0"} />
-                ) : selectedIndex === 1 ? (
-                  <IconBrandAlipay size={28} stroke={2} color={isDark ? "#60a5fa" : "#1565c0"} />
-                ) : (
-                  <svg viewBox="0 0 24 24" width="28" height="28" stroke={isDark ? "#60a5fa" : "#1565c0"}
-                    fill="none" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                    {tabIcons[selectedIndex].map((d, i) => (
-                      <path key={i} d={d} />
-                    ))}
-                  </svg>
-                )}
+                {(() => {
+                  const iconPaths = tabIcons[selectedIndex];
+                  if (selectedIndex === 0) {
+                    // Deloitte (leftmost, newest) — use BuildingPlus component
+                    return (
+                      <IconBuildingPlus size={28} stroke={2} color={isDark ? "#60a5fa" : "#1565c0"} />
+                    );
+                  }
+                  if (selectedIndex === 1) {
+                    // Alipay — use BrandAlipay component
+                    return (
+                      <IconBrandAlipay size={28} stroke={2} color={isDark ? "#60a5fa" : "#1565c0"} />
+                    );
+                  }
+                  // SINOSIG or NetEase — inline SVG
+                  return (
+                    <svg viewBox="0 0 24 24" width="28" height="28" stroke={isDark ? "#60a5fa" : "#1565c0"}
+                      fill="none" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                      {iconPaths.map((d, i) => (
+                        <path key={i} d={d} />
+                      ))}
+                    </svg>
+                  );
+                })()}
               </div>
               <div>
                 <div className="exp-detail-role">{selected.role}</div>
