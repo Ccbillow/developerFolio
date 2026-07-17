@@ -66,13 +66,18 @@ function RoadSVG({isDark, selectedIndex, onSelect}) {
   const segColors = ["#1565c0", "#1976d2", "#42a5f5", "#90caf9"];
   const segColorsDark = ["#1d4ed8", "#2563eb", "#3b82f6", "#60a5fa"];
 
-  const roadPath = "M 40,190 C 140,190 170,155 270,155 C 370,155 400,200 500,200 C 600,200 630,155 730,155 C 830,155 860,190 920,190";
+  // Horizontal stretch: lengthen the road without changing thickness / pin / font
+  // sizes. Only x-positions scale by SX; the viewBox width + svg max-width scale too.
+  const SX = 1.1;
+  const P = (x) => +(x * SX).toFixed(2);
+
+  const roadPath = `M ${P(40)},190 C ${P(140)},190 ${P(170)},155 ${P(270)},155 C ${P(370)},155 ${P(400)},200 ${P(500)},200 C ${P(600)},200 ${P(630)},155 ${P(730)},155 C ${P(830)},155 ${P(860)},190 ${P(920)},190`;
 
   const pinPositions = [
-    {pct: offsets[0] + segs[0] / 2, x: 170, y: 158},
-    {pct: offsets[1] + segs[1] / 2, x: 350, y: 175},
-    {pct: offsets[2] + segs[2] / 2, x: 580, y: 175},
-    {pct: offsets[3] + segs[3] / 2, x: 810, y: 170},
+    {pct: offsets[0] + segs[0] / 2, x: P(170), y: 158},
+    {pct: offsets[1] + segs[1] / 2, x: P(350), y: 175},
+    {pct: offsets[2] + segs[2] / 2, x: P(580), y: 175},
+    {pct: offsets[3] + segs[3] / 2, x: P(810), y: 170},
   ];
 
   const roadStroke = isDark ? "#0c2340" : "#c5d5e3";
@@ -106,7 +111,7 @@ function RoadSVG({isDark, selectedIndex, onSelect}) {
   }
 
   return (
-    <svg className="exp-road-svg" viewBox="0 0 960 300" xmlns="http://www.w3.org/2000/svg">
+    <svg className="exp-road-svg" viewBox="0 0 1056 300" xmlns="http://www.w3.org/2000/svg">
 
       {/* road border */}
       <path d={roadPath} fill="none" stroke={roadStroke} strokeWidth="34" strokeLinecap="round" pathLength={totalLen} />
@@ -146,36 +151,36 @@ function RoadSVG({isDark, selectedIndex, onSelect}) {
         return (
           <g fill={cloudFill}>
             {/* near pin 1 — Deloitte (logo y≈80) */}
-            <g transform="translate(120, 85) scale(0.5)" opacity="0.3">
+            <g transform={`translate(${P(120)}, 85) scale(0.5)`} opacity="0.3">
               <circle cx="0" cy="0" r="18" /><circle cx="22" cy="-6" r="14" /><circle cx="-18" cy="2" r="12" /><circle cx="10" cy="8" r="10" />
             </g>
-            <g transform="translate(200, 92) scale(0.38)" opacity="0.22">
+            <g transform={`translate(${P(200)}, 92) scale(0.38)`} opacity="0.22">
               <circle cx="0" cy="0" r="16" /><circle cx="18" cy="-4" r="12" /><circle cx="-14" cy="1" r="10" />
             </g>
 
             {/* near pin 2 — Alipay (logo y≈97) */}
-            <g transform="translate(300, 108) scale(0.5)" opacity="0.25">
+            <g transform={`translate(${P(300)}, 108) scale(0.5)`} opacity="0.25">
               <circle cx="0" cy="0" r="20" /><circle cx="25" cy="-8" r="16" /><circle cx="-20" cy="3" r="14" /><circle cx="12" cy="10" r="12" />
             </g>
 
             {/* between pins 2 & 3 */}
-            <g transform="translate(460, 98) scale(0.45)" opacity="0.22">
+            <g transform={`translate(${P(460)}, 98) scale(0.45)`} opacity="0.22">
               <circle cx="0" cy="0" r="18" /><circle cx="22" cy="-6" r="14" /><circle cx="-18" cy="2" r="12" /><circle cx="10" cy="8" r="10" />
             </g>
 
             {/* near pin 3 — SINOSIG (logo y≈97) */}
-            <g transform="translate(550, 105) scale(0.48)" opacity="0.28">
+            <g transform={`translate(${P(550)}, 105) scale(0.48)`} opacity="0.28">
               <circle cx="0" cy="0" r="20" /><circle cx="25" cy="-8" r="16" /><circle cx="-20" cy="3" r="14" /><circle cx="12" cy="10" r="12" />
             </g>
-            <g transform="translate(640, 90) scale(0.38)" opacity="0.2">
+            <g transform={`translate(${P(640)}, 90) scale(0.38)`} opacity="0.2">
               <circle cx="0" cy="0" r="16" /><circle cx="18" cy="-4" r="12" /><circle cx="-14" cy="1" r="10" />
             </g>
 
             {/* near pin 4 — NetEase (logo y≈92) */}
-            <g transform="translate(760, 95) scale(0.5)" opacity="0.26">
+            <g transform={`translate(${P(760)}, 95) scale(0.5)`} opacity="0.26">
               <circle cx="0" cy="0" r="18" /><circle cx="22" cy="-6" r="14" /><circle cx="-18" cy="2" r="12" /><circle cx="10" cy="8" r="10" />
             </g>
-            <g transform="translate(870, 100) scale(0.4)" opacity="0.22">
+            <g transform={`translate(${P(870)}, 100) scale(0.4)`} opacity="0.22">
               <circle cx="0" cy="0" r="20" /><circle cx="24" cy="-7" r="15" /><circle cx="-19" cy="2" r="13" /><circle cx="10" cy="9" r="11" />
             </g>
           </g>
@@ -195,45 +200,50 @@ function RoadSVG({isDark, selectedIndex, onSelect}) {
           <g>
             {/* ═══ LEFT SIDE ═══ */}
             {/* tree L1 — large */}
-            <rect x="14" y="160" width="7" height="24" rx="2" fill={trunk} opacity="0.55" />
-            <ellipse cx="17.5" cy="148" rx="18" ry="22" fill={fOuter} opacity="0.45" />
-            <ellipse cx="17.5" cy="138" rx="12" ry="16" fill={fInner} opacity="0.5" />
+            <rect x={P(14)} y="160" width="7" height="24" rx="2" fill={trunk} opacity="0.55" />
+            <ellipse cx={P(17.5)} cy="148" rx="18" ry="22" fill={fOuter} opacity="0.45" />
+            <ellipse cx={P(17.5)} cy="138" rx="12" ry="16" fill={fInner} opacity="0.5" />
             {/* tree L2 — small */}
-            <rect x="42" y="172" width="5" height="15" rx="1.5" fill={trunk} opacity="0.5" />
-            <ellipse cx="44.5" cy="164" rx="12" ry="14" fill={fOuter} opacity="0.38" />
-            <ellipse cx="44.5" cy="156" rx="8" ry="10" fill={fInner} opacity="0.42" />
+            <rect x={P(42)} y="172" width="5" height="15" rx="1.5" fill={trunk} opacity="0.5" />
+            <ellipse cx={P(44.5)} cy="164" rx="12" ry="14" fill={fOuter} opacity="0.38" />
+            <ellipse cx={P(44.5)} cy="156" rx="8" ry="10" fill={fInner} opacity="0.42" />
             {/* tree L3 — tiny, further back */}
-            <rect x="5" y="178" width="4" height="10" rx="1" fill={trunk} opacity="0.4" />
-            <ellipse cx="7" cy="172" rx="9" ry="10" fill={fOuter} opacity="0.3" />
-            <ellipse cx="7" cy="166" rx="6" ry="7" fill={fInner} opacity="0.35" />
+            <rect x={P(5)} y="178" width="4" height="10" rx="1" fill={trunk} opacity="0.4" />
+            <ellipse cx={P(7)} cy="172" rx="9" ry="10" fill={fOuter} opacity="0.3" />
+            <ellipse cx={P(7)} cy="166" rx="6" ry="7" fill={fInner} opacity="0.35" />
 
-            {/* ═══ RIGHT SIDE ═══ */}
-            {/* tree R1 — large */}
-            <rect x="905" y="158" width="8" height="26" rx="2" fill={trunk} opacity="0.55" />
-            <ellipse cx="909" cy="145" rx="20" ry="24" fill={fOuter} opacity="0.45" />
-            <ellipse cx="909" cy="135" rx="13" ry="17" fill={fInner} opacity="0.5" />
-            {/* tree R2 — small */}
-            <rect x="925" y="170" width="5" height="16" rx="1.5" fill={trunk} opacity="0.5" />
-            <ellipse cx="927.5" cy="162" rx="12" ry="14" fill={fOuter} opacity="0.38" />
-            <ellipse cx="927.5" cy="154" rx="8" ry="9" fill={fInner} opacity="0.42" />
-            {/* tree R3 — tiny */}
-            <rect x="875" y="182" width="4" height="10" rx="1" fill={trunk} opacity="0.4" />
-            <ellipse cx="877" cy="175" rx="9" ry="10" fill={fOuter} opacity="0.3" />
-            <ellipse cx="877" cy="169" rx="6" ry="7" fill={fInner} opacity="0.35" />
+            {/* ═══ RIGHT SIDE — pine trees 🌲 ═══ */}
+            {/* pine R1 — large */}
+            <rect x={P(906)} y="172" width="6" height="14" rx="1" fill={trunk} opacity="0.55" />
+            <polygon points={`${P(909)},150 ${P(885)},180 ${P(933)},180`} fill={fOuter} opacity="0.45" />
+            <polygon points={`${P(909)},130 ${P(889)},160 ${P(929)},160`} fill={fOuter} opacity="0.45" />
+            <polygon points={`${P(909)},112 ${P(894)},140 ${P(924)},140`} fill={fOuter} opacity="0.45" />
+            <polygon points={`${P(909)},138 ${P(895)},158 ${P(923)},158`} fill={fInner} opacity="0.5" />
+            <polygon points={`${P(909)},120 ${P(899)},138 ${P(919)},138`} fill={fInner} opacity="0.5" />
+            {/* pine R2 — small */}
+            <rect x={P(925)} y="174" width="5" height="13" rx="1" fill={trunk} opacity="0.5" />
+            <polygon points={`${P(927.5)},154 ${P(912)},178 ${P(943)},178`} fill={fOuter} opacity="0.38" />
+            <polygon points={`${P(927.5)},140 ${P(916)},160 ${P(939)},160`} fill={fOuter} opacity="0.38" />
+            <polygon points={`${P(927.5)},148 ${P(919)},164 ${P(936)},164`} fill={fInner} opacity="0.42" />
+            {/* pine R3 — tiny */}
+            <rect x={P(875)} y="183" width="4" height="10" rx="1" fill={trunk} opacity="0.4" />
+            <polygon points={`${P(877)},172 ${P(865)},187 ${P(889)},187`} fill={fOuter} opacity="0.3" />
+            <polygon points={`${P(877)},162 ${P(868)},178 ${P(886)},178`} fill={fOuter} opacity="0.3" />
+            <polygon points={`${P(877)},168 ${P(871)},180 ${P(883)},180`} fill={fInner} opacity="0.35" />
 
             {/* ═══ MIDDLE bushes & stones (between pins) ═══ */}
-            <ellipse cx="255" cy="192" rx="16" ry="9" fill={bushColor} opacity="0.28" />
-            <ellipse cx="265" cy="194" rx="10" ry="6" fill={bushColor} opacity="0.22" />
-            <ellipse cx="460" cy="196" rx="14" ry="8" fill={bushColor} opacity="0.3" />
-            <ellipse cx="690" cy="188" rx="13" ry="8" fill={bushColor} opacity="0.26" />
-            <ellipse cx="700" cy="190" rx="9" ry="5" fill={bushColor} opacity="0.2" />
+            <ellipse cx={P(255)} cy="192" rx="16" ry="9" fill={bushColor} opacity="0.28" />
+            <ellipse cx={P(265)} cy="194" rx="10" ry="6" fill={bushColor} opacity="0.22" />
+            <ellipse cx={P(460)} cy="196" rx="14" ry="8" fill={bushColor} opacity="0.3" />
+            <ellipse cx={P(690)} cy="188" rx="13" ry="8" fill={bushColor} opacity="0.26" />
+            <ellipse cx={P(700)} cy="190" rx="9" ry="5" fill={bushColor} opacity="0.2" />
 
             {/* small stones near road edges */}
-            <ellipse cx="105" cy="195" rx="5" ry="3.5" fill={rockColor} opacity="0.3" />
-            <ellipse cx="305" cy="198" rx="4" ry="3" fill={rockColor} opacity="0.25" />
-            <ellipse cx="440" cy="202" rx="6" ry="3.5" fill={rockColor} opacity="0.28" />
-            <ellipse cx="630" cy="188" rx="4.5" ry="3" fill={rockColor} opacity="0.25" />
-            <ellipse cx="850" cy="192" rx="5" ry="3.5" fill={rockColor} opacity="0.3" />
+            <ellipse cx={P(105)} cy="195" rx="5" ry="3.5" fill={rockColor} opacity="0.3" />
+            <ellipse cx={P(305)} cy="198" rx="4" ry="3" fill={rockColor} opacity="0.25" />
+            <ellipse cx={P(440)} cy="202" rx="6" ry="3.5" fill={rockColor} opacity="0.28" />
+            <ellipse cx={P(630)} cy="188" rx="4.5" ry="3" fill={rockColor} opacity="0.25" />
+            <ellipse cx={P(850)} cy="192" rx="5" ry="3.5" fill={rockColor} opacity="0.3" />
           </g>
         );
       })()}
@@ -241,7 +251,7 @@ function RoadSVG({isDark, selectedIndex, onSelect}) {
       {/* Date labels below road */}
       {exps.map((exp, i) => {
         const midPct = (offsets[i] + segs[i] / 2) / totalLen;
-        const labelX = 40 + midPct * 880;
+        const labelX = P(40 + midPct * 880);
         const isActive = selectedIndex === i;
         return (
           <text key={i} x={labelX} y={228} textAnchor="middle"
@@ -333,6 +343,45 @@ function RoadSVG({isDark, selectedIndex, onSelect}) {
   );
 }
 
+/* ── Mobile vertical timeline (≤768px) ───────── */
+function TimelineNav({isDark, selectedIndex, onSelect}) {
+  const exps = workExperiences.experience;
+  const colors = isDark
+    ? ["#1d4ed8", "#2563eb", "#3b82f6", "#60a5fa"]
+    : ["#1565c0", "#1976d2", "#42a5f5", "#90caf9"];
+
+  return (
+    <div className="exp-timeline">
+      {exps.map((exp, i) => {
+        const isActive = selectedIndex === i;
+        return (
+          <button
+            key={i}
+            type="button"
+            className={`exp-tl-item${isActive ? " active" : ""}`}
+            style={{"--tl-color": colors[i]}}
+            onClick={() => onSelect(i)}
+          >
+            <span className="exp-tl-node">
+              <svg viewBox="0 0 24 24" width="22" height="22"
+                stroke={isActive ? "#fff" : (isDark ? "#93c5fd" : "#1565c0")}
+                fill="none" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+                {tabIcons[i].map((d, j) => (
+                  <path key={j} d={d} />
+                ))}
+              </svg>
+            </span>
+            <span className="exp-tl-text">
+              <span className="exp-tl-company">{exp.company}</span>
+              <span className="exp-tl-years">{getYearRange(exp.date)} · {getYearDuration(exp.date)} yrs</span>
+            </span>
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
 /* ── Main component ──────────────────────────── */
 export default function WorkExperience() {
   const {isDark} = useContext(StyleContext);
@@ -353,6 +402,7 @@ export default function WorkExperience() {
           </h1>
 
           <RoadSVG isDark={isDark} selectedIndex={selectedIndex} onSelect={setSelectedIndex} />
+          <TimelineNav isDark={isDark} selectedIndex={selectedIndex} onSelect={setSelectedIndex} />
 
           {/* Single detail card */}
           <div className={`exp-detail${isDark ? " exp-detail-dark" : ""}`}>

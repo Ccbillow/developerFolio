@@ -20,7 +20,7 @@
 .exp-road-svg {
   display: block;
   width: 100%;
-  max-width: 960px;
+  max-width: 1056px; /* widened so the road renders longer at the same thickness */
   margin: 0 auto;
 }
 
@@ -81,6 +81,12 @@
 
 .exp-pin-group {
   cursor: pointer;
+}
+
+/* ── Mobile vertical timeline (hidden on desktop) ─── */
+
+.exp-timeline {
+  display: none;
 }
 
 /* ── Single detail card ──────────────────────── */
@@ -243,11 +249,104 @@
     margin-bottom: 0.3rem;
   }
 
+  /* Hide the horizontal road; show vertical timeline instead */
   .exp-road-svg {
-    min-height: 240px;
-    margin-bottom: 0;
-    transform: scale(1.02);
-    transform-origin: center center;
+    display: none;
+  }
+
+  .exp-timeline {
+    display: flex;
+    flex-direction: column;
+    max-width: 960px;
+    margin: 0.5rem auto 1.2rem;
+    padding: 0 4px;
+  }
+
+  .exp-tl-item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+    padding: 10px 12px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    text-align: left;
+    font-family: inherit;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* vertical connector running through node centers */
+  .exp-tl-item:not(:last-child)::before {
+    content: "";
+    position: absolute;
+    left: 34px; /* padding-left 12 + node half-width 22 */
+    top: 50%;
+    width: 2px;
+    height: 100%;
+    transform: translateX(-1px);
+    background: #d0dcea;
+    z-index: 0;
+  }
+
+  .exp-tl-node {
+    position: relative;
+    z-index: 1;
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(21, 101, 192, 0.08);
+    transition: background 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+  }
+
+  .exp-tl-item.active .exp-tl-node {
+    background: var(--tl-color);
+    box-shadow: 0 4px 12px rgba(21, 101, 192, 0.35);
+    transform: scale(1.08);
+  }
+
+  .exp-tl-text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .exp-tl-company {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #000;
+  }
+
+  .exp-tl-item.active .exp-tl-company {
+    color: #1565c0;
+  }
+
+  .exp-tl-years {
+    font-size: 0.85rem;
+    color: #868e96;
+    margin-top: 2px;
+  }
+
+  /* dark mode */
+  .exp-wrap-dark .exp-tl-item:not(:last-child)::before {
+    background: #2a3a5a;
+  }
+
+  .exp-wrap-dark .exp-tl-node {
+    background: rgba(59, 130, 246, 0.15);
+  }
+
+  .exp-wrap-dark .exp-tl-company {
+    color: #fff;
+  }
+
+  .exp-wrap-dark .exp-tl-item.active .exp-tl-company {
+    color: #93c5fd;
   }
 
   .exp-detail {
