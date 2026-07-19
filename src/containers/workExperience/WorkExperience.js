@@ -44,6 +44,26 @@ function getYearDuration(dateStr) {
   return 1;
 }
 
+/* ── Ripple (halo) tuning — 想调波纹改这几个数字就行 ──
+ *  RIPPLE_START    : 每圈波纹的起始半径（越小 = 越贴近气泡、整体越小）
+ *  RIPPLE_GROW     : 波纹向外扩散的距离（越小 = 波纹越小）
+ *  RIPPLE_OPACITY  : 波纹最亮时的不透明度 0–1（越大 = 越明显）
+ *  RIPPLE_WIDTH    : 波纹线条粗细
+ *  RIPPLE_SPEED_MS : 每一步的毫秒数（越大 = 整体越慢）
+ *  RIPPLE_PERIOD   : 相邻两圈之间的间隔（越大 = 间隔越长；所有间隔恒等、均匀）
+ *  RIPPLE_TRAVEL   : 一圈从生成到消失走过的行程（越大 = 每圈扩散/存在得越久）
+ */
+const RIPPLE_START = 26;
+const RIPPLE_GROW = 20;
+const RIPPLE_OPACITY = 0.7;
+const RIPPLE_WIDTH = 3;
+const RIPPLE_SPEED_MS = 50;
+const RIPPLE_PERIOD = 70;
+const RIPPLE_TRAVEL = 100;
+
+const RIPPLE_RINGS = Math.ceil(RIPPLE_TRAVEL / RIPPLE_PERIOD) + 1;
+const RIPPLE_CYCLE = RIPPLE_RINGS * RIPPLE_PERIOD;
+
 /* ── SVG Winding Road ────────────────────────── */
 function RoadSVG({isDark, selectedIndex, onSelect}) {
   // Newest on the left, oldest on the right (2022–24 → 2017–18)
@@ -68,8 +88,10 @@ function RoadSVG({isDark, selectedIndex, onSelect}) {
 
   // Horizontal stretch: lengthen the road without changing thickness / pin / font
   // sizes. Only x-positions scale by SX; the viewBox width + svg max-width scale too.
-  const SX = 1.1;
+  // Tweak SX to make the road longer/shorter — everything else adapts automatically.
+  const SX = 1.2;
   const P = (x) => +(x * SX).toFixed(2);
+  const VIEW_W = Math.round(960 * SX);  // auto-scaled viewBox width so nothing gets clipped
 
   const roadPath = `M ${P(40)},190 C ${P(140)},190 ${P(170)},155 ${P(270)},155 C ${P(370)},155 ${P(400)},200 ${P(500)},200 C ${P(600)},200 ${P(630)},155 ${P(730)},155 C ${P(830)},155 ${P(860)},190 ${P(920)},190`;
 
@@ -90,17 +112,21 @@ function RoadSVG({isDark, selectedIndex, onSelect}) {
   const rippleRef = useRef(null);
 
   useEffect(() => {
-    rippleRef.current = setInterval(() => setRipplePhase(p => (p + 1) % 100), 75);
+    rippleRef.current = setInterval(() => setRipplePhase(p => (p + 1) % RIPPLE_CYCLE), RIPPLE_SPEED_MS);
     return () => {
       clearInterval(rippleRef.current);
     };
   }, []);
 
-  // Ripple: two rings at different phases
-  const rippleR1 = 22 + (ripplePhase / 100) * 22;
-  const rippleO1 = 0.55 * (1 - ripplePhase / 100);
-  const rippleR2 = 22 + (((ripplePhase + 50) % 100) / 100) * 22;
-  const rippleO2 = 0.55 * (1 - ((ripplePhase + 50) % 100) / 100);
+  // Rings are "emitted" every RIPPLE_PERIOD (uniform spacing); each lives RIPPLE_TRAVEL.
+  const ripples = [];
+  for (let k = 0; k < RIPPLE_RINGS; k++) {
+    const local = (((ripplePhase - k * RIPPLE_PERIOD) % RIPPLE_CYCLE) + RIPPLE_CYCLE) % RIPPLE_CYCLE;
+    if (local < RIPPLE_TRAVEL) {
+      const f = local / RIPPLE_TRAVEL; // 0 → 1 over the ring's life
+      ripples.push({r: RIPPLE_START + f * RIPPLE_GROW, o: RIPPLE_OPACITY * (1 - f)});
+    }
+  }
 
   function roadYAtPct(pct) {
     const t = pct / totalLen;
@@ -111,7 +137,7 @@ function RoadSVG({isDark, selectedIndex, onSelect}) {
   }
 
   return (
-    <svg className="exp-road-svg" viewBox="0 0 1056 300" xmlns="http://www.w3.org/2000/svg">
+    <svg className="exp-road-svg" viewBox={`0 0 ${VIEW_W} 300`} style={{maxWidth: VIEW_W}} xmlns="http://www.w3.org/2000/svg">
 
       {/* road border */}
       <path d={roadPath} fill="none" stroke={roadStroke} strokeWidth="34" strokeLinecap="round" pathLength={totalLen} />
@@ -281,21 +307,16 @@ function RoadSVG({isDark, selectedIndex, onSelect}) {
               stroke={isDark ? "#3b82f6" : "#1565c0"} strokeWidth="1.2"
               strokeDasharray="4 3" opacity={isActive ? 0.9 : 0.5} />
             {/* Pulse ripple rings — only for active pin, React-controlled */}
-            {isActive && (
-              <>
-                <circle cx={pos.x} cy={pinY - 78} r={rippleR1} fill="none"
-                  stroke={isDark ? "#60a5fa" : "#42a5f5"} strokeWidth="2"
-                  opacity={rippleO1} />
-                <circle cx={pos.x} cy={pinY - 78} r={rippleR2} fill="none"
-                  stroke={isDark ? "#60a5fa" : "#42a5f5"} strokeWidth="2"
-                  opacity={rippleO2} />
-              </>
-            )}
+            {isActive && ripples.map((rp, k) => (
+              <circle key={k} cx={pos.x} cy={pinY - 78} r={rp.r} fill="none"
+                stroke={isDark ? "#60a5fa" : "#42a5f5"} strokeWidth={RIPPLE_WIDTH}
+                opacity={rp.o} />
+            ))}
             {/* pin body + tail + icon — float animation (CSS) + scale (inline) */}
             <g transform={`translate(${pos.x},${pinY - 78})`}>
               <g className={isActive ? "exp-pin-float" : ""}>
                 <g style={{
-                  transform: `scale(${isActive ? 1.5 : 1})`,
+                  transform: `scale(${isActive ? 1.35 : 1})`,
                   transition: "transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1)",
                 }}>
                 {/* pin body */}
